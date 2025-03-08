@@ -112,7 +112,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="0yoWX5p_2rhBYwDN8DBq-31" value="Sessions" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;whiteSpace=wrap;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="-510" y="-30" width="180" height="150" as="geometry" />
+          <mxGeometry x="-510" width="180" height="150" as="geometry" />
         </mxCell>
         <mxCell id="0yoWX5p_2rhBYwDN8DBq-32" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;fillColor=none;collapsible=0;dropTarget=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=0;html=1;" vertex="1" parent="0yoWX5p_2rhBYwDN8DBq-31">
           <mxGeometry y="30" width="180" height="30" as="geometry" />
@@ -446,12 +446,6 @@
         <mxCell id="0yoWX5p_2rhBYwDN8DBq-205" value="end_date&amp;nbsp;" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;html=1;whiteSpace=wrap;" vertex="1" parent="0yoWX5p_2rhBYwDN8DBq-203">
           <mxGeometry x="60" width="120" height="30" as="geometry">
             <mxRectangle width="120" height="30" as="alternateBounds" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="0yoWX5p_2rhBYwDN8DBq-283" value="" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;edgeStyle=elbowEdgeStyle;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="0yoWX5p_2rhBYwDN8DBq-1" target="0yoWX5p_2rhBYwDN8DBq-35">
-          <mxGeometry width="100" height="100" relative="1" as="geometry">
-            <mxPoint x="-30" y="110" as="sourcePoint" />
-            <mxPoint x="80" y="126.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="0yoWX5p_2rhBYwDN8DBq-302" value="" style="fontSize=12;html=1;endArrow=ERoneToMany;rounded=0;edgeStyle=elbowEdgeStyle;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="0yoWX5p_2rhBYwDN8DBq-1" target="0yoWX5p_2rhBYwDN8DBq-48">
