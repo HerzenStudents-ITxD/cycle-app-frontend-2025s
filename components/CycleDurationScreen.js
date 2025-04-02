@@ -11,10 +11,7 @@ export default function CycleDurationScreen({ navigation }) {
                 title="Перейти на страницу Менструации"
                 onPress={() => navigation.navigate('MenstruationLength')} //
             />
-            <Button
-                title="Перейти на главную страницу"
-                onPress={() => navigation.navigate('Home')}
-            />
+
         </View>
     );
 }

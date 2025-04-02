@@ -12,10 +12,7 @@ export default function LoginScreen({ navigation }) {
                 title="Перейти на страницу Цикла"
                 onPress={() => navigation.navigate('CycleDuration')} //
             />
-            <Button
-                title="Перейти на главную страницу"
-                onPress={() => navigation.navigate('Home')}
-            />
+
         </View>
     );
 }

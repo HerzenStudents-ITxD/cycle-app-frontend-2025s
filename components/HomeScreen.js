@@ -10,10 +10,7 @@ export default function HomeScreen({ navigation }) {
                 title="Перейти на страницу Настройки"
                 onPress={() => navigation.navigate('Settings')}
             />
-            <Button
-                title="Перейти на страницу Входа"
-                onPress={() => navigation.navigate('Login')} // Кнопка для перехода на страницу Входа
-            />
+
 
 
         </View>
