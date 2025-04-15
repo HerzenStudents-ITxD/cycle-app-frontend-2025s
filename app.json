@@ -7,6 +7,21 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "fonts": [
+        {
+          "name": "Comfortaa",
+          "weights": [400, 700],
+          "files": [
+            "./assets/fonts/Comfortaa-Regular.ttf",
+            "./assets/fonts/Comfortaa-Bold.ttf"
+          ]
+        }
+      ]
+    },
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
