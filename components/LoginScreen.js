@@ -1,23 +1,50 @@
-// components/LoginScreen.js
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Text, TextInput, Button, useTheme } from 'react-native-paper';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, TextInput, Button } from 'react-native-paper';
+import * as Font from 'expo-font';
 
 export default function LoginScreen({ navigation }) {
-    const theme = useTheme();
-    const [email, setEmail] = React.useState('');
-    const [code, setCode] = React.useState('');
+    const [email, setEmail] = useState('');
+    const [code, setCode] = useState('');
+    const [fontsLoaded, setFontsLoaded] = useState(false);
 
-    // Цвета из задания
+    // Цвета
     const accentColor = '#F4CDB0';
     const buttonTextColor = '#000000';
+    const backgroundColor = '#FFFFFF';
+    const textColor = '#000000';
+
+    // Загрузка шрифтов
+    useEffect(() => {
+        async function loadFonts() {
+            await Font.loadAsync({
+                'Comfortaa-Regular': require('../assets/fonts/Comfortaa-Regular.ttf'),
+                'Comfortaa-Bold': require('../assets/fonts/Comfortaa-Bold.ttf'),
+            });
+            setFontsLoaded(true);
+        }
+        loadFonts();
+    }, []);
+
+    if (!fontsLoaded) {
+        return (
+            <View style={[styles.container, { backgroundColor }]}>
+                <ActivityIndicator size="large" color={accentColor} />
+            </View>
+        );
+    }
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <Text variant="displaySmall" style={styles.title}>
+        <View style={[styles.container, { backgroundColor }]}>
+            {/* Заголовок */}
+            <Text style={[styles.title, {
+                fontFamily: 'Comfortaa-Bold',
+                color: textColor
+            }]}>
                 вход
             </Text>
 
+            {/* Поле почты - ТОЛЬКО ОБВОДКА */}
             <TextInput
                 label="Почта"
                 value={email}
@@ -26,31 +53,40 @@ export default function LoginScreen({ navigation }) {
                 style={styles.input}
                 theme={{
                     colors: {
-                        primary: accentColor,
-                        outline: accentColor,
+                        primary: accentColor, // Цвет обводки
+                        background: backgroundColor, // Прозрачный фон
+                        text: textColor,
+                        placeholder: '#888888',
+                        surface: backgroundColor // Важно для прозрачности
+                    },
+                    fonts: {
+                        regular: { fontFamily: 'Comfortaa-Regular' }
                     },
                     roundness: 6
                 }}
+                outlineColor={accentColor} // Обводка всегда акцентного цвета
+                activeOutlineColor={accentColor}
                 autoCapitalize="none"
             />
 
-            <View style={styles.buttonAlignContainer}>
-                <Button
-                    mode="contained"
-                    onPress={() => navigation.navigate('CycleDuration')}
-                    style={[styles.submitButton, {
-                        backgroundColor: accentColor,
-                        borderRadius: 4
-                    }]}
-                    labelStyle={[styles.buttonLabel, { color: buttonTextColor }]}
-                    theme={{
-                        roundness: 1
-                    }}
-                >
-                    Отправить код
-                </Button>
-            </View>
+            {/* Кнопка - ПОЛНОСТЬЮ ЗАЛИТА ЦВЕТОМ */}
+            <Button
+                mode="contained"
+                onPress={() => navigation.navigate('CycleDuration')}
+                style={[styles.submitButton, {
+                    backgroundColor: accentColor, // Полная заливка
+                    borderColor: accentColor
+                }]}
+                labelStyle={[styles.buttonLabel, {
+                    color: buttonTextColor,
+                    fontFamily: 'Comfortaa-Regular'
+                }]}
+                contentStyle={{ height: 37 }}
+            >
+                Отправить код
+            </Button>
 
+            {/* Поле кода - ТОЛЬКО ОБВОДКА */}
             <TextInput
                 label="Код"
                 value={code}
@@ -60,20 +96,32 @@ export default function LoginScreen({ navigation }) {
                 theme={{
                     colors: {
                         primary: accentColor,
-                        outline: accentColor,
+                        background: backgroundColor,
+                        text: textColor,
+                        placeholder: '#888888',
+                        surface: backgroundColor
+                    },
+                    fonts: {
+                        regular: { fontFamily: 'Comfortaa-Regular' }
                     },
                     roundness: 6
                 }}
+                outlineColor={accentColor}
+                activeOutlineColor={accentColor}
             />
 
+            {/* Вторая кнопка */}
             <Button
-                mode="outlined"
+                mode="contained"
                 onPress={() => navigation.navigate('CycleDuration')}
                 style={[styles.navButton, {
-                    borderColor: accentColor,
-                    borderRadius: 4
+                    backgroundColor: backgroundColor // Полная заливка
                 }]}
-                labelStyle={[styles.buttonLabel, { color: accentColor }]}
+                labelStyle={[styles.buttonLabel, {
+                    color: buttonTextColor,
+                    fontFamily: 'Comfortaa-Regular'
+                }]}
+                contentStyle={{ height: 50 }}
             >
                 Перейти на страницу Цикла
             </Button>
@@ -85,34 +133,29 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
     },
     title: {
-        marginBottom: 40,
-        fontWeight: 'bold',
         fontSize: 24,
-        alignSelf: 'center'
+        marginBottom: 40,
+        textAlign: 'center',
     },
     input: {
-        width: '100%',
         marginBottom: 20,
-    },
-    buttonAlignContainer: {
-        width: '100%',
-        marginBottom: 20,
-        alignItems: 'flex-start' // Это выравнивает кнопку влево
+        backgroundColor: 'transparent', // Прозрачный фон
     },
     submitButton: {
-        paddingVertical: 0,
-        paddingHorizontal: 24,
-        height: 36,
+        marginBottom: 20,
+        borderRadius: 4,
+        width: '70%',
     },
     navButton: {
-        width: '100%',
-        paddingVertical: 8,
-        marginTop: 20,
-        borderWidth: 1,
+        borderRadius: 4,
+        marginTop: 10
     },
     buttonLabel: {
         fontSize: 16,
+        fontWeight: 'normal',
     },
 });
