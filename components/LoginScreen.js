@@ -69,7 +69,6 @@ export default function LoginScreen({ navigation }) {
 
                 <Button
                     mode="contained"
-                    onPress={() => navigation.navigate('CycleDuration')}
                     style={styles.submitButton}
                     labelStyle={styles.submitButtonLabel}
                     contentStyle={styles.submitButtonContent}
@@ -112,7 +111,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        marginTop: 40,
+        marginTop: 80,
         marginBottom: 80, // Увеличено с 20 до 40 (или любое другое значение)
         color: '#000000',
         fontFamily: 'Comfortaa-Regular',
@@ -162,7 +161,7 @@ const styles = StyleSheet.create({
     },
     bottomButtonContainer: {
         width: '100%',
-        marginBottom: 24,
+        marginBottom: 70,
         alignItems: 'center',
     },
     nextButton: {
