@@ -60,6 +60,7 @@ export default function App() {
                 <Stack.Navigator
                     initialRouteName="Login"
                     screenOptions={{
+                        headerShown: false,
                         headerTitleStyle: {
                             fontFamily: 'Comfortaa-Bold',
                             fontSize: 20,
@@ -73,12 +74,12 @@ export default function App() {
                     <Stack.Screen
                         name="Login"
                         component={LoginScreen}
-                        options={{
-                            title: 'Вход',
-                            headerTitleStyle: {
-                                fontFamily: 'Comfortaa-Bold',
-                            }
-                        }}
+                        // options={{
+                        //     title: 'Вход',
+                        //     headerTitleStyle: {
+                        //         fontFamily: 'Comfortaa-Bold',
+                        //     }
+                        // }}
                     />
                     <Stack.Screen
                         name="Home"

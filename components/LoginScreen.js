@@ -3,17 +3,23 @@ import { View, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
 import { Text, TextInput, Button } from 'react-native-paper';
 import * as Font from 'expo-font';
 
-const { width } = Dimensions.get('window');
-const marginLeft = width * 0.1;
-const labelWidth1 = width * 0.7;
-
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
     const [fontsLoaded, setFontsLoaded] = useState(false);
+    const [dimensions, setDimensions] = useState(() => Dimensions.get('window'));
 
     const accentColor = '#F4CDB0';
     const blackColor = '#000000';
+
+    const styles = createStyles(dimensions);
+
+    useEffect(() => {
+        const subscription = Dimensions.addEventListener('change', ({ window }) => {
+            setDimensions(window);
+        });
+        return () => subscription?.remove();
+    }, []);
 
     const inputTheme = {
         colors: {
@@ -52,75 +58,80 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            {/* Заголовок вынесен отдельно перед основным контентом */}
-            <Text style={styles.title}>вход</Text>
+            <View style={styles.centeredContainer}>
+                <Text style={styles.title}>вход</Text>
 
-            <View style={styles.contentContainer}>
-                <Text style={styles.fieldLabel}>почта</Text>
-                <TextInput
-                    value={email}
-                    onChangeText={setEmail}
-                    mode="outlined"
-                    style={styles.input}
-                    theme={inputTheme}
-                    outlineColor={accentColor}
-                    activeOutlineColor={accentColor}
-                />
+                <View style={styles.contentContainer}>
+                    <Text style={styles.fieldLabel}>почта</Text>
+                    <TextInput
+                        value={email}
+                        onChangeText={setEmail}
+                        mode="outlined"
+                        style={styles.input}
+                        theme={inputTheme}
+                        outlineColor={accentColor}
+                        activeOutlineColor={accentColor}
+                    />
 
-                <Button
-                    mode="contained"
-                    style={styles.submitButton}
-                    labelStyle={styles.submitButtonLabel}
-                    contentStyle={styles.submitButtonContent}
-                >
-                    отправить код
-                </Button>
+                    <Button
+                        mode="contained"
+                        style={styles.submitButton}
+                        labelStyle={styles.submitButtonLabel}
+                        contentStyle={styles.submitButtonContent}
+                    >
+                        отправить код
+                    </Button>
 
-                <Text style={styles.fieldLabel}>код</Text>
-                <TextInput
-                    value={code}
-                    onChangeText={setCode}
-                    mode="outlined"
-                    style={styles.input}
-                    theme={inputTheme}
-                    outlineColor={accentColor}
-                    activeOutlineColor={accentColor}
-                />
-            </View>
+                    <Text style={styles.fieldLabel}>код</Text>
+                    <TextInput
+                        value={code}
+                        onChangeText={setCode}
+                        mode="outlined"
+                        style={styles.input}
+                        theme={inputTheme}
+                        outlineColor={accentColor}
+                        activeOutlineColor={accentColor}
+                    />
+                </View>
 
-            <View style={styles.bottomButtonContainer}>
-                <Button
-                    mode="contained"
-                    onPress={() => navigation.navigate('CycleDuration')}
-                    style={styles.nextButton}
-                    labelStyle={styles.nextButtonLabel}
-                    contentStyle={styles.nextButtonContent}
-                >
-                    далее
-                </Button>
+                <View style={styles.bottomButtonContainer}>
+                    <Button
+                        mode="contained"
+                        onPress={() => navigation.navigate('CycleDuration')}
+                        style={styles.nextButton}
+                        labelStyle={styles.nextButtonLabel}
+                        contentStyle={styles.nextButtonContent}
+                    >
+                        далее
+                    </Button>
+                </View>
             </View>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = ({ width = 375, height = 812 } = {}) => StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 24,
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#FFFFFF',
+    },
+    centeredContainer: {
+        width: width * 0.8, // 80% ширины экрана
+        maxWidth: 400, // Максимальная ширина для больших экранов
+        alignItems: 'center',
     },
     title: {
         fontSize: 24,
-        marginTop: 80,
-        marginBottom: 80, // Увеличено с 20 до 40 (или любое другое значение)
+        marginBottom: height * 0.1,
         color: '#000000',
         fontFamily: 'Comfortaa-Regular',
         textAlign: 'center',
     },
     contentContainer: {
-        flex: 1,
-        justifyContent: 'flex-start',
         width: '100%',
+        alignItems: 'center',
     },
     fieldLabel: {
         fontSize: 18.1,
@@ -128,14 +139,13 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontFamily: 'Comfortaa-Regular',
         alignSelf: 'flex-start',
-        paddingLeft: marginLeft
+        width: '100%',
     },
     input: {
         marginBottom: 10,
         backgroundColor: 'transparent',
-        width: labelWidth1,
+        width: '100%',
         height: 50,
-        alignSelf: 'center',
     },
     submitButton: {
         marginBottom: 40,
@@ -144,9 +154,7 @@ const styles = StyleSheet.create({
         height: 25,
         backgroundColor: '#F4CDB0',
         justifyContent: 'center',
-        alignItems: 'center',
         alignSelf: 'flex-start',
-        marginLeft: marginLeft,
     },
     submitButtonLabel: {
         fontSize: 19.84,
@@ -157,17 +165,18 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
     },
     submitButtonContent: {
-        height: 37,
+        height: 50,
     },
     bottomButtonContainer: {
         width: '100%',
-        marginBottom: 70,
+        marginTop: 20,
+        marginBottom: height * 0.05,
         alignItems: 'center',
     },
     nextButton: {
         borderRadius: 4,
         backgroundColor: '#F4CDB0',
-        width: labelWidth1,
+        width: '100%',
         height: 55,
         justifyContent: 'center',
     },
