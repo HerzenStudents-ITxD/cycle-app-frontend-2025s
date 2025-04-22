@@ -1,126 +1,316 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+    View,
+    StyleSheet,
+    ActivityIndicator,
+    useWindowDimensions,
+    FlatList,
+    Text as RNText,
+    Image,
+    TouchableOpacity
+} from 'react-native';
 import { Text, Button } from 'react-native-paper';
 import * as Font from 'expo-font';
-import { Picker } from '@react-native-picker/picker';
 
+const COLORS = {
+    accent: '#F4CDB0',
+    highlight: '#F9E3D6',
+    black: '#000000',
+    white: '#FFFFFF',
+    gray: '#CCCCCC',
+    transparentWhite: 'rgba(255, 255, 255, 0.7)',
+};
 
-const { width, height } = Dimensions.get('window');
-const marginLeft = width * 0.1;
-const labelWidth = width * 0.7;
-const marginFromBottom = height * 0.1;
-const marginFromTop = height * 0.1;
+const SIZES = {
+    itemHeight: 70,
+    visibleItems: 5,
+};
 
 export default function CycleDurationScreen({ navigation }) {
-    const [days, setDays] = useState('5');
+    const [selectedDay, setSelectedDay] = useState(5);
     const [fontsLoaded, setFontsLoaded] = useState(false);
+    const { width, height } = useWindowDimensions();
+    const flatListRef = useRef(null);
 
-    const accentColor = '#F4CDB0';
-    const blackColor = '#000000';
+    const days = Array.from({ length: 70 }, (_, i) => i + 1);
+    const styles = createStyles({ width, height }, SIZES.itemHeight, SIZES.visibleItems);
 
     useEffect(() => {
-        async function loadFonts() {
-            await Font.loadAsync({
-                'Comfortaa-Regular': require('../assets/fonts/Comfortaa-Regular.ttf'),
-                'Comfortaa-Bold': require('../assets/fonts/Comfortaa-Bold.ttf'),
-            });
-            setFontsLoaded(true);
-        }
-        loadFonts();
+        (async () => {
+            try {
+                await Font.loadAsync({
+                    'Comfortaa-Regular': require('../assets/fonts/Comfortaa-Regular.ttf'),
+                    'Comfortaa-Bold': require('../assets/fonts/Comfortaa-Bold.ttf'),
+                });
+                setFontsLoaded(true);
+            } catch (e) {
+                console.error('Font loading error:', e);
+            }
+        })();
     }, []);
+
+    useEffect(() => {
+        flatListRef.current?.scrollToIndex({
+            index: selectedDay - 1,
+            animated: false,
+        });
+    }, [fontsLoaded]);
+
+    const handleScroll = (event) => {
+        const y = event.nativeEvent.contentOffset.y;
+        const index = Math.round(y / SIZES.itemHeight);
+        if (days[index] !== selectedDay) {
+            setSelectedDay(days[index]);
+        }
+    };
+
+    const handleMomentumScrollEnd = (event) => {
+        const y = event.nativeEvent.contentOffset.y;
+        const index = Math.round(y / SIZES.itemHeight);
+        setSelectedDay(days[index]);
+    };
+
+    const handleNavigate = () => {
+        navigation.navigate('MenstruationLength');
+    };
 
     if (!fontsLoaded) {
         return (
             <View style={styles.container}>
-                <ActivityIndicator size="large" color={accentColor} />
+                <ActivityIndicator size="large" color={COLORS.accent} />
             </View>
         );
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>длительность цикла</Text>
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.navigate('Login')}
+            >
+                <Image
+                    source={require('../assets/backButton.png')}
+                    style={styles.backButtonImage}
+                    resizeMode="contain"
+                />
+            </TouchableOpacity>
 
+            <View style={styles.centeredContainer}>
+                <Text style={styles.title}>длительность{'\n'}цикла</Text>
 
+                <View style={styles.scrollPickerContainer}>
+                    <View style={styles.scrollPickerHighlightBackground} />
+                    <View style={[styles.scrollPickerMask, styles.scrollPickerMaskTop]} />
 
-            <View style={styles.bottomButtonContainer}>
-                <Button
-                    mode="contained"
-                    onPress={() => navigation.navigate('PeriodDuration')}
-                    style={styles.nextButton}
-                    labelStyle={styles.nextButtonLabel}
-                    contentStyle={styles.nextButtonContent}
-                >
-                    далее
-                </Button>
+                    <FlatList
+                        ref={flatListRef}
+                        data={days}
+                        keyExtractor={(item) => item.toString()}
+                        renderItem={({ item }) => {
+                            const isSelected = selectedDay === item;
+                            return (
+                                <View style={[styles.scrollPickerItem, { height: SIZES.itemHeight }]}>
+                                    <RNText style={[
+                                        styles.scrollPickerItemText,
+                                        isSelected && styles.scrollPickerItemTextSelected,
+                                        isSelected && { lineHeight: SIZES.itemHeight }
+                                    ]}>
+                                        {item}
+                                    </RNText>
+                                </View>
+                            );
+                        }}
+                        getItemLayout={(data, index) => ({
+                            length: SIZES.itemHeight,
+                            offset: SIZES.itemHeight * index,
+                            index,
+                        })}
+                        showsVerticalScrollIndicator={false}
+                        snapToInterval={SIZES.itemHeight}
+                        decelerationRate="fast"
+                        onScroll={handleScroll}
+                        scrollEventThrottle={16}
+                        onMomentumScrollEnd={handleMomentumScrollEnd}
+                        initialNumToRender={30}
+                        windowSize={11}
+                        maxToRenderPerBatch={30}
+                        updateCellsBatchingPeriod={50}
+                        contentContainerStyle={{
+                            paddingTop: SIZES.itemHeight * Math.floor(SIZES.visibleItems / 2),
+                            paddingBottom: SIZES.itemHeight * Math.floor(SIZES.visibleItems / 2),
+                        }}
+                    />
+
+                    <View style={[styles.scrollPickerMask, styles.scrollPickerMaskBottom]} />
+                </View>
+
+                {/* Кнопка "Не знаю" */}
+                <View style={styles.dontKnowButtonContainer}>
+                    <Button
+                        mode="contained"
+                        onPress={handleNavigate}
+                        style={styles.dontKnowButton}
+                        labelStyle={styles.dontKnowButtonLabel}
+                        contentStyle={styles.dontKnowButtonContent}
+                    >
+                        не знаю
+                    </Button>
+                </View>
+
+                {/* Кнопка "Далее" */}
+                <View style={styles.bottomButtonContainer}>
+                    <Button
+                        mode="contained"
+                        onPress={handleNavigate}
+                        style={styles.nextButton}
+                        labelStyle={styles.nextButtonLabel}
+                        contentStyle={styles.nextButtonContent}
+                    >
+                        далее
+                    </Button>
+                </View>
             </View>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = ({ width, height }, itemHeight, visibleItems) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: COLORS.white,
+    },
+    backButton: {
+        position: 'absolute',
+        top: height * 0.15,
+        left: 20,
+        zIndex: 10,
+        padding: 10,
+    },
+    backButtonImage: {
+        width: 24,
+        height: 24,
+    },
+    centeredContainer: {
+        flex: 1,
+        width: width * 0.8,
+        maxWidth: 400,
+        alignSelf: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 20,
     },
     title: {
         fontSize: 24,
-        marginTop: marginFromTop,
-        marginBottom: height * 0.15,
-        color: '#000000',
+        marginTop: height * 0.15,
+        color: COLORS.black,
         fontFamily: 'Comfortaa-Regular',
         textAlign: 'center',
     },
-    contentContainer: {
-        flex: 1,
-        justifyContent: 'flex-start',
+    scrollPickerContainer: {
         width: '100%',
+        height: itemHeight * visibleItems,
+        position: 'relative',
+        marginBottom: 0, // Уменьшил отступ снизу для пикера
+        overflow: 'hidden',
     },
-    fieldLabel: {
-        fontSize: 18.1,
-        marginBottom: height * 0.02,
-        color: '#000000',
+    scrollPickerHighlightBackground: {
+        position: 'absolute',
+        top: itemHeight * Math.floor(visibleItems / 2) + 2,
+        left: 0,
+        right: 0,
+        height: itemHeight - 4,
+        backgroundColor: COLORS.highlight,
+        borderRadius: 4,
+        zIndex: 0,
+    },
+    scrollPickerMask: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        height: itemHeight,
+        backgroundColor: COLORS.transparentWhite,
+        zIndex: 2,
+    },
+    scrollPickerMaskTop: {
+        top: 0,
+    },
+    scrollPickerMaskBottom: {
+        bottom: 0,
+    },
+    scrollPickerItem: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: itemHeight,
+    },
+    scrollPickerItemText: {
+        fontSize: 50,
         fontFamily: 'Comfortaa-Regular',
-        alignSelf: 'flex-start',
-        paddingLeft: marginLeft
+        color: COLORS.gray,
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+        paddingTop: 0,
+        paddingBottom: 0,
+        marginTop: -2,
+        marginBottom: -2,
     },
-    pickerContainer: {
-        width: labelWidth,
-        alignSelf: 'center',
-        borderWidth: 1,
-        borderColor: '#F4CDB0',
-        borderRadius: 6,
-        marginBottom: height * 0.05,
+    scrollPickerItemTextSelected: {
+        fontSize: 60,
+        color: COLORS.black,
+        fontFamily: 'Comfortaa-Regular',
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        includeFontPadding: false,
+        paddingTop: 0,
+        paddingBottom: 0,
+        marginTop: 1,
+        marginBottom: -4,
+        lineHeight: itemHeight - 4,
     },
-    picker: {
+    // Стили для кнопки "Не знаю"
+    dontKnowButtonContainer: {
         width: '100%',
-        height: height * 0.07,
+        alignItems: 'center',
     },
-    pickerItem: {
-        fontSize: 16,
+    dontKnowButton: {
+        borderRadius: 4,
+        width: '53%',
+        height: 30,
+        backgroundColor: '#F9E3D6',
+        justifyContent: 'center',
+    },
+    dontKnowButtonLabel: {
+        fontSize: 19.84,
+        color: '#FFFFFF',
         fontFamily: 'Comfortaa-Regular',
+        fontWeight: 'normal',
+        marginHorizontal: 0,
+        paddingVertical: 0,
     },
+    dontKnowButtonContent: {
+        height: 50,
+    },
+    // Стили для кнопки "Далее"
     bottomButtonContainer: {
         width: '100%',
-        marginBottom: marginFromBottom,
         alignItems: 'center',
+        paddingBottom: '15%',
     },
     nextButton: {
         borderRadius: 4,
-        backgroundColor: '#F4CDB0',
-        width: labelWidth,
-        height: height * 0.07,
+        backgroundColor: COLORS.accent,
+        width: '100%',
+        height: 70,
         justifyContent: 'center',
     },
     nextButtonLabel: {
         fontSize: 27.68,
-        color: '#FFFFFF',
+        color: COLORS.white,
         fontFamily: 'Comfortaa-Regular',
         fontWeight: 'normal',
         lineHeight: 27.68,
         paddingVertical: 0,
     },
     nextButtonContent: {
-        height: height * 0.07,
+        height: 70,
     },
 });
