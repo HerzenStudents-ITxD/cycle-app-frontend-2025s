@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b4d985a2-2e46-467e-8798-d5098ebaba4b" name="Changes" comment="CycleDurationScreen безумно крутой прокруткой">
+      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CycleDurationScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/CycleDurationScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/LoginScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2vASt3QX1wJFdPoxmvQaN7LzKD9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/olesy/OneDrive/unik/react/cycle-app-frontend-2025s&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\olesy\\AppData\\Local\\JetBrains\\WebStorm 2024.3.5\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-WS-243.26053.12" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b4d985a2-2e46-467e-8798-d5098ebaba4b" name="Changes" comment="" />
+      <created>1743586596515</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1743586596515</updated>
+      <workItem from="1743586599257" duration="4365000" />
+      <workItem from="1744579128703" duration="56000" />
+      <workItem from="1744579415621" duration="58000" />
+      <workItem from="1744583750397" duration="5465000" />
+      <workItem from="1744613712271" duration="13360000" />
+      <workItem from="1744755525066" duration="354000" />
+      <workItem from="1744755931097" duration="27084000" />
+      <workItem from="1745072435452" duration="1824000" />
+      <workItem from="1745074288835" duration="3524000" />
+      <workItem from="1745312544331" duration="399000" />
+      <workItem from="1745313721478" duration="205000" />
+    </task>
+    <task id="LOCAL-00001" summary="убрали лишние кнопки">
+      <option name="closed" value="true" />
+      <created>1743595048928</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1743595048928</updated>
+    </task>
+    <task id="LOCAL-00002" summary="LogIn Screen дизайн (без шрифта)">
+      <option name="closed" value="true" />
+      <created>1744754713076</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1744754713076</updated>
+    </task>
+    <task id="LOCAL-00003" summary="LogIn Screen шрифт (надписи внутри полей ввода)">
+      <option name="closed" value="true" />
+      <created>1744756654383</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1744756654383</updated>
+    </task>
+    <task id="LOCAL-00004" summary="LogIn Screen доделан v1">
+      <option name="closed" value="true" />
+      <created>1744763336591</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1744763336591</updated>
+    </task>
+    <task id="LOCAL-00005" summary="CycleDurationScreen безумно крутой прокруткой">
+      <option name="closed" value="true" />
+      <created>1744767366861</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1744767366861</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="убрали лишние кнопки" />
+    <MESSAGE value="LogIn Screen дизайн (без шрифта)" />
+    <MESSAGE value="LogIn Screen шрифт (надписи внутри полей ввода)" />
+    <MESSAGE value="LogIn Screen доделан v1" />
+    <MESSAGE value="CycleDurationScreen безумно крутой прокруткой" />
+    <option name="LAST_COMMIT_MESSAGE" value="CycleDurationScreen безумно крутой прокруткой" />
+  </component>
+</project>

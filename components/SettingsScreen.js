@@ -1,25 +1,390 @@
-// components/SettingsScreen.js
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+    View,
+    StyleSheet,
+    Switch,
+    TouchableOpacity,
+    Image,
+    ActivityIndicator,
+    TextInput,
+    Modal,
+    Dimensions
+} from 'react-native';
+import { Text, Button } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import * as Font from 'expo-font';
 
-export default function SettingsScreen({ navigation }) {
+const COLORS = {
+    light: {
+        background: '#FFFFFF',
+        text: '#000000',
+        inputBorder: '#F4CDB0',
+        inputBackground: '#FFFFFF',
+        buttonActive: '#F4CDB0',
+        buttonInactive: '#FFFFFF',
+        buttonTextActive: '#FFFFFF',
+        buttonTextInactive: '#000000',
+        logoutText: '#F4CDB0',
+        modalBackground: '#FFFFFF',
+        modalText: '#000000',
+        cancelButton: '#EEEEEE',
+    },
+    dark: {
+        background: '#121212',
+        text: '#FFFFFF',
+        inputBorder: '#555',
+        inputBackground: '#333',
+        buttonActive: '#F4CDB0',
+        buttonInactive: '#333',
+        buttonTextActive: '#FFFFFF',
+        buttonTextInactive: '#FFFFFF',
+        logoutText: '#F4CDB0',
+        modalBackground: '#333',
+        modalText: '#FFFFFF',
+        cancelButton: '#555',
+    }
+};
+
+const { width, height } = Dimensions.get('window');
+
+const SettingsScreen = () => {
+    const navigation = useNavigation();
+    const [fontsLoaded, setFontsLoaded] = useState(false);
+    const [cycleLength, setCycleLength] = useState('28');
+    const [menstruationLength, setMenstruationLength] = useState('5');
+    const [cycleVariation, setCycleVariation] = useState('1');
+    const [remindMenstruation, setRemindMenstruation] = useState(true);
+    const [remindOvulation, setRemindOvulation] = useState(false);
+    const [darkTheme, setDarkTheme] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+    useEffect(() => {
+        (async () => {
+            await Font.loadAsync({
+                'Comfortaa-Regular': require('../assets/fonts/Comfortaa-Regular.ttf'),
+                'Comfortaa-Bold': require('../assets/fonts/Comfortaa-Bold.ttf'),
+            });
+            setFontsLoaded(true);
+        })();
+    }, []);
+
+    const handleNumberChange = (text, setter) => {
+        const cleanedText = text.replace(/[^0-9]/g, '');
+        setter(cleanedText);
+    };
+
+    const confirmLogout = () => {
+        setShowLogoutModal(true);
+    };
+
+    const handleLogout = () => {
+        setShowLogoutModal(false);
+        navigation.navigate('Home');
+    };
+
+    if (!fontsLoaded) {
+        return (
+            <View style={styles.container}>
+                <ActivityIndicator size="large" color="#F4CDB0" />
+            </View>
+        );
+    }
+
+    const colors = darkTheme ? COLORS.dark : COLORS.light;
+
     return (
-        <View style={styles.container}>
-            <Text>Страница Настройки</Text>
-            <Text>Настройки приложения</Text>
-            <Button
-                title="Вернуться назад"
-                onPress={() => navigation.goBack()}
-            />
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.navigate('Home')}
+            >
+                <Image
+                    source={require('../assets/backButton.png')}
+                    style={[styles.backButtonImage, { tintColor: colors.text }]}
+                    resizeMode="contain"
+                />
+            </TouchableOpacity>
+
+            <View style={styles.centeredContainer}>
+                <Text style={[styles.title, { color: colors.text }]}>настройки</Text>
+
+                <View style={styles.contentContainer}>
+                    {/* Длительность цикла */}
+                    <View style={styles.settingRow}>
+                        <Text style={[styles.settingLabel, { color: colors.text }]}>длительность цикла</Text>
+                        <TextInput
+                            style={[
+                                styles.numberInput,
+                                {
+                                    color: colors.text,
+                                    borderColor: colors.inputBorder,
+                                    backgroundColor: colors.inputBackground
+                                }
+                            ]}
+                            keyboardType="numeric"
+                            value={cycleLength}
+                            onChangeText={(text) => handleNumberChange(text, setCycleLength)}
+                            maxLength={2}
+                        />
+                    </View>
+
+                    {/* Длительность менструации */}
+                    <View style={styles.settingRow}>
+                        <Text style={[styles.settingLabel, { color: colors.text }]}>длительность менструации</Text>
+                        <TextInput
+                            style={[
+                                styles.numberInput,
+                                {
+                                    color: colors.text,
+                                    borderColor: colors.inputBorder,
+                                    backgroundColor: colors.inputBackground
+                                }
+                            ]}
+                            keyboardType="numeric"
+                            value={menstruationLength}
+                            onChangeText={(text) => handleNumberChange(text, setMenstruationLength)}
+                            maxLength={2}
+                        />
+                    </View>
+
+                    {/* Вариация цикла */}
+                    <View style={styles.settingRow}>
+                        <Text style={[styles.settingLabel, { color: colors.text }]}>вариация цикла</Text>
+                        <TextInput
+                            style={[
+                                styles.numberInput,
+                                {
+                                    color: colors.text,
+                                    borderColor: colors.inputBorder,
+                                    backgroundColor: colors.inputBackground
+                                }
+                            ]}
+                            keyboardType="numeric"
+                            value={cycleVariation}
+                            onChangeText={(text) => handleNumberChange(text, setCycleVariation)}
+                            maxLength={2}
+                        />
+                    </View>
+
+                    {/* Напоминания */}
+                    <View style={styles.settingRow}>
+                        <Text style={[styles.settingLabel, { color: colors.text }]}>напоминать о начале менструации</Text>
+                        <Switch
+                            value={remindMenstruation}
+                            onValueChange={setRemindMenstruation}
+                            trackColor={{ false: "#767577", true: "#F4CDB0" }}
+                            thumbColor={remindMenstruation ? "#FFFFFF" : "#f4f3f4"}
+                        />
+                    </View>
+
+                    <View style={styles.settingRow}>
+                        <Text style={[styles.settingLabel, { color: colors.text }]}>напоминать о начале овуляции</Text>
+                        <Switch
+                            value={remindOvulation}
+                            onValueChange={setRemindOvulation}
+                            trackColor={{ false: "#767577", true: "#F4CDB0" }}
+                            thumbColor={remindOvulation ? "#FFFFFF" : "#f4f3f4"}
+                        />
+                    </View>
+
+                    {/* Тема */}
+                    <View style={styles.settingRow}>
+                        <Text style={[styles.settingLabel, { color: colors.text }]}>тема</Text>
+                        <View style={styles.themeOptions}>
+                            <TouchableOpacity
+                                style={[
+                                    styles.themeButton,
+                                    !darkTheme && styles.activeThemeButton,
+                                    { backgroundColor: !darkTheme ? colors.buttonActive : colors.buttonInactive }
+                                ]}
+                                onPress={() => setDarkTheme(false)}
+                            >
+                                <Text style={[
+                                    styles.themeButtonText,
+                                    { color: !darkTheme ? colors.buttonTextActive : colors.buttonTextInactive }
+                                ]}>
+                                    светлая
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[
+                                    styles.themeButton,
+                                    darkTheme && styles.activeThemeButton,
+                                    { backgroundColor: darkTheme ? colors.buttonActive : colors.buttonInactive }
+                                ]}
+                                onPress={() => setDarkTheme(true)}
+                            >
+                                <Text style={[
+                                    styles.themeButtonText,
+                                    { color: darkTheme ? colors.buttonTextActive : colors.buttonTextInactive }
+                                ]}>
+                                    темная
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+
+                {/* Кнопка выхода */}
+                <View style={styles.bottomButtonContainer}>
+                    <TouchableOpacity onPress={confirmLogout}>
+                        <Text style={[styles.logoutText, { color: colors.logoutText }]}>выйти</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            {/* Модальное окно подтверждения выхода */}
+            <Modal
+                visible={showLogoutModal}
+                transparent={true}
+                animationType="fade"
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={[styles.modalContent, { backgroundColor: colors.modalBackground }]}>
+                        <Text style={[styles.modalTitle, { color: colors.text }]}>Вы точно хотите выйти?</Text>
+                        <View style={styles.modalButtons}>
+                            <TouchableOpacity
+                                style={[styles.modalButton, { backgroundColor: colors.cancelButton }]}
+                                onPress={() => setShowLogoutModal(false)}
+                            >
+                                <Text style={[styles.modalButtonText, { color: colors.text }]}>Отмена</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.modalButton, styles.confirmButton]}
+                                onPress={handleLogout}
+                            >
+                                <Text style={styles.modalButtonText}>Выйти</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+    },
+    backButton: {
+        position: 'absolute',
+        top: height * 0.15,
+        left: 20,
+        zIndex: 10,
+        padding: 10,
+    },
+    backButtonImage: {
+        width: 24,
+        height: 24,
+    },
+    centeredContainer: {
+        flex: 1,
+        width: width * 0.8,
+        maxWidth: 400,
+        alignSelf: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 20,
+    },
+    title: {
+        fontSize: 24,
+        marginTop: height * 0.15,
+        marginBottom: height * 0.04,
+        fontFamily: 'Comfortaa-Regular',
+        textAlign: 'center',
+    },
+    contentContainer: {
+        flex: 1,
+    },
+    settingRow: {
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 25,
+        minHeight: 40,
+    },
+    settingLabel: {
+        flex: 1,
+        fontSize: 18,
+        fontFamily: 'Comfortaa-Regular',
+        marginRight: 15,
+    },
+    numberInput: {
+        width: 60,
+        height: 40,
+        borderWidth: 1,
+        borderRadius: 20,
+        textAlign: 'center',
+        fontSize: 18,
+        fontFamily: 'Comfortaa-Regular',
+        paddingHorizontal: 0,
+    },
+    themeOptions: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    themeButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 20,
+        marginLeft: 10,
+        borderWidth: 1,
+    },
+    activeThemeButton: {
+        borderWidth: 0,
+    },
+    themeButtonText: {
+        fontSize: 18,
+        fontFamily: 'Comfortaa-Regular',
+    },
+    bottomButtonContainer: {
+        width: '100%',
+        alignItems: 'flex-start',
+        paddingLeft: 5,
+    },
+    logoutText: {
+        fontSize: 18,
+        fontFamily: 'Comfortaa-Regular',
+        marginBottom: "15%",
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        width: '80%',
+        borderRadius: 10,
+        padding: 20,
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontFamily: 'Comfortaa-Regular',
+        marginBottom: 25,
+        textAlign: 'center',
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    modalButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        minWidth: '45%',
+        alignItems: 'center',
+    },
+    confirmButton: {
+        backgroundColor: '#F4CDB0',
+    },
+    modalButtonText: {
+        fontSize: 18,
+        fontFamily: 'Comfortaa-Regular',
+        color: '#FFFFFF',
     },
 });
+
+export default SettingsScreen;

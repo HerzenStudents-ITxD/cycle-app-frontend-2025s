@@ -32,7 +32,7 @@ export default function CycleDurationScreen({ navigation }) {
     const { width, height } = useWindowDimensions();
     const flatListRef = useRef(null);
 
-    const days = Array.from({ length: 70 }, (_, i) => i + 1);
+    const days = Array.from({ length: 10 }, (_, i) => i + 1);
     const styles = createStyles({ width, height }, SIZES.itemHeight, SIZES.visibleItems);
 
     useEffect(() => {

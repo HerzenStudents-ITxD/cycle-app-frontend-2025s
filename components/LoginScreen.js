@@ -62,6 +62,10 @@ export default function LoginScreen({ navigation }) {
     };
 
     const handleNext = () => {
+        if (!email.includes('@') || !email.includes('.')) {
+            alert('Пожалуйста, введите email');
+            return;
+        }
         if (!code) {
             alert('Пожалуйста, введите код');
             return;
