@@ -26,7 +26,15 @@ const SIZES = {
     visibleItems: 5,
 };
 
-export default function CycleDurationScreen({ navigation }) {
+
+
+export default function CycleDurationScreen({route, navigation }) {
+    const { email, token } = route.params;
+
+    console.log(email);
+    console.log(token);
+
+    // let token = navigation.params.token;
     const [selectedDay, setSelectedDay] = useState(5);
     const [fontsLoaded, setFontsLoaded] = useState(false);
     const { width, height } = useWindowDimensions();
@@ -70,8 +78,8 @@ export default function CycleDurationScreen({ navigation }) {
         setSelectedDay(days[index]);
     };
 
-    const handleNavigate = () => {
-        navigation.navigate('MenstruationLength');
+    const handleNavigate = (useDefault = false) => {
+        navigation.navigate('MenstruationLength', {"email": email, "tempToken": token, "cycleLength": useDefault ? 0 : selectedDay});
     };
 
     if (!fontsLoaded) {
@@ -148,7 +156,7 @@ export default function CycleDurationScreen({ navigation }) {
                 <View style={styles.dontKnowButtonContainer}>
                     <Button
                         mode="contained"
-                        onPress={handleNavigate}
+                        onPress={()=> handleNavigate (true)}
                         style={styles.dontKnowButton}
                         labelStyle={styles.dontKnowButtonLabel}
                         contentStyle={styles.dontKnowButtonContent}
@@ -161,7 +169,7 @@ export default function CycleDurationScreen({ navigation }) {
                 <View style={styles.bottomButtonContainer}>
                     <Button
                         mode="contained"
-                        onPress={handleNavigate}
+                        onPress={()=> handleNavigate(false)}
                         style={styles.nextButton}
                         labelStyle={styles.nextButtonLabel}
                         contentStyle={styles.nextButtonContent}

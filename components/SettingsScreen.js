@@ -6,11 +6,10 @@ import {
     TouchableOpacity,
     Image,
     ActivityIndicator,
-    TextInput,
+    Text,
     Modal,
     Dimensions
 } from 'react-native';
-import { Text, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
 
@@ -68,18 +67,13 @@ const SettingsScreen = () => {
         })();
     }, []);
 
-    const handleNumberChange = (text, setter) => {
-        const cleanedText = text.replace(/[^0-9]/g, '');
-        setter(cleanedText);
-    };
-
     const confirmLogout = () => {
         setShowLogoutModal(true);
     };
 
     const handleLogout = () => {
         setShowLogoutModal(false);
-        navigation.navigate('Home');
+        navigation.navigate('Login');
     };
 
     if (!fontsLoaded) {
@@ -112,58 +106,25 @@ const SettingsScreen = () => {
                     {/* Длительность цикла */}
                     <View style={styles.settingRow}>
                         <Text style={[styles.settingLabel, { color: colors.text }]}>длительность цикла</Text>
-                        <TextInput
-                            style={[
-                                styles.numberInput,
-                                {
-                                    color: colors.text,
-                                    borderColor: colors.inputBorder,
-                                    backgroundColor: colors.inputBackground
-                                }
-                            ]}
-                            keyboardType="numeric"
-                            value={cycleLength}
-                            onChangeText={(text) => handleNumberChange(text, setCycleLength)}
-                            maxLength={2}
-                        />
+                        <Text style={[styles.numberInput, { color: colors.text }]}>
+                            {cycleLength}
+                        </Text>
                     </View>
 
                     {/* Длительность менструации */}
                     <View style={styles.settingRow}>
                         <Text style={[styles.settingLabel, { color: colors.text }]}>длительность менструации</Text>
-                        <TextInput
-                            style={[
-                                styles.numberInput,
-                                {
-                                    color: colors.text,
-                                    borderColor: colors.inputBorder,
-                                    backgroundColor: colors.inputBackground
-                                }
-                            ]}
-                            keyboardType="numeric"
-                            value={menstruationLength}
-                            onChangeText={(text) => handleNumberChange(text, setMenstruationLength)}
-                            maxLength={2}
-                        />
+                        <Text style={[styles.numberInput, { color: colors.text }]}>
+                            {menstruationLength}
+                        </Text>
                     </View>
 
                     {/* Вариация цикла */}
                     <View style={styles.settingRow}>
                         <Text style={[styles.settingLabel, { color: colors.text }]}>вариация цикла</Text>
-                        <TextInput
-                            style={[
-                                styles.numberInput,
-                                {
-                                    color: colors.text,
-                                    borderColor: colors.inputBorder,
-                                    backgroundColor: colors.inputBackground
-                                }
-                            ]}
-                            keyboardType="numeric"
-                            value={cycleVariation}
-                            onChangeText={(text) => handleNumberChange(text, setCycleVariation)}
-                            maxLength={2}
-                        />
+                        <Text style={[styles.numberInput, { color: colors.text }]}>
+                            {cycleVariation}
+                        </Text>
                     </View>
 
                     {/* Напоминания */}
@@ -199,10 +160,7 @@ const SettingsScreen = () => {
                                 ]}
                                 onPress={() => setDarkTheme(false)}
                             >
-                                <Text style={[
-                                    styles.themeButtonText,
-                                    { color: !darkTheme ? colors.buttonTextActive : colors.buttonTextInactive }
-                                ]}>
+                                <Text style={[styles.themeButtonText, { color: !darkTheme ? colors.buttonTextActive : colors.buttonTextInactive }]}>
                                     светлая
                                 </Text>
                             </TouchableOpacity>
@@ -214,10 +172,7 @@ const SettingsScreen = () => {
                                 ]}
                                 onPress={() => setDarkTheme(true)}
                             >
-                                <Text style={[
-                                    styles.themeButtonText,
-                                    { color: darkTheme ? colors.buttonTextActive : colors.buttonTextInactive }
-                                ]}>
+                                <Text style={[styles.themeButtonText, { color: darkTheme ? colors.buttonTextActive : colors.buttonTextInactive }]}>
                                     темная
                                 </Text>
                             </TouchableOpacity>
@@ -308,16 +263,13 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'Comfortaa-Regular',
         marginRight: 15,
+        textAlign: 'left',
     },
     numberInput: {
-        width: 60,
-        height: 40,
-        borderWidth: 1,
-        borderRadius: 20,
-        textAlign: 'center',
         fontSize: 18,
         fontFamily: 'Comfortaa-Regular',
-        paddingHorizontal: 0,
+        textAlign: 'center',
+        minWidth: 60,
     },
     themeOptions: {
         flexDirection: 'row',

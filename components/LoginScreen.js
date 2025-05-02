@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator, useWindowDimensions } from 'react-native';
-import { Text, TextInput, Button } from 'react-native-paper';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, ActivityIndicator, useWindowDimensions, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {Text, TextInput, Button} from 'react-native-paper';
 import * as Font from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const COLORS = {
     accent: '#F9E3D6',
@@ -11,14 +12,14 @@ const COLORS = {
     gray: '#888888',
 };
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('');
     const [code, setCode] = useState('');
     const [fontsLoaded, setFontsLoaded] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const { width, height } = useWindowDimensions();
+    const {width, height} = useWindowDimensions();
 
-    const styles = createStyles({ width, height });
+    const styles = createStyles({width, height});
 
     useEffect(() => {
         async function loadFonts() {
@@ -28,6 +29,7 @@ export default function LoginScreen({ navigation }) {
             });
             setFontsLoaded(true);
         }
+
         loadFonts();
     }, []);
 
@@ -42,7 +44,7 @@ export default function LoginScreen({ navigation }) {
             outline: COLORS.accent,
         },
         fonts: {
-            regular: { fontFamily: 'Comfortaa-Regular' }
+            regular: {fontFamily: 'Comfortaa-Regular'}
         },
         roundness: 6
     };
@@ -54,14 +56,32 @@ export default function LoginScreen({ navigation }) {
         }
         setIsLoading(true);
         try {
-            // Логика отправки кода...
+            const response = await fetch("http://knafchik.lan:5000/api/auth/send-code", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'text/plain',
+                },
+                body: JSON.stringify(email)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
             console.log('Код отправлен на:', email);
+            alert('Код отправлен на вашу почту');
+        } catch (error) {
+            console.error('Ошибка при отправке кода:', error);
+            alert(error.message || 'Произошла ошибка при отправке кода');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (!email.includes('@') || !email.includes('.')) {
             alert('Пожалуйста, введите email');
             return;
@@ -70,77 +90,108 @@ export default function LoginScreen({ navigation }) {
             alert('Пожалуйста, введите код');
             return;
         }
-        navigation.navigate('CycleDuration');
+        try {
+            const response = await fetch("http://knafchik.lan:5000/api/auth/verify-code", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "email": email,
+                    "code": code,
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `Неверный код. Статус: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Код подтверждён:', data);
+            if (!data.isNewUser) {
+                await AsyncStorage.setItem('Token', data.token);
+                navigation.navigate('Home');
+            } else {
+                navigation.navigate('CycleDuration', {"email": email, "token": data.token});
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке кода:', error);
+            alert(error.message || 'Что-то пошло не так');
+        }
     };
 
     if (!fontsLoaded) {
         return (
             <View style={styles.container}>
-                <ActivityIndicator size="large" color={COLORS.accent} />
+                <ActivityIndicator size="large" color={COLORS.accent}/>
             </View>
         );
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.centeredContainer}>
-                <Text style={styles.title}>вход</Text>
+        // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View style={styles.container}>
+                <View style={styles.centeredContainer}>
+                    <Text style={styles.title}>вход</Text>
 
-                <View style={styles.contentContainer}>
-                    <Text style={styles.fieldLabel}>почта</Text>
-                    <TextInput
-                        value={email}
-                        onChangeText={setEmail}
-                        mode="outlined"
-                        style={styles.input}
-                        theme={inputTheme}
-                        outlineColor={COLORS.accent}
-                        activeOutlineColor={COLORS.accent}
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                    />
+                    <View style={styles.contentContainer}>
+                        <Text style={styles.fieldLabel}>почта</Text>
+                        <TextInput
+                            autoFocus
+                            value={email}
+                            onChangeText={setEmail}
+                            mode="outlined"
+                            style={styles.input}
+                            theme={inputTheme}
+                            outlineColor={COLORS.accent}
+                            activeOutlineColor={COLORS.accent}
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                        />
 
-                    <Button
-                        mode="contained"
-                        style={styles.submitButton}
-                        labelStyle={styles.submitButtonLabel}
-                        contentStyle={styles.submitButtonContent}
-                        onPress={handleSendCode}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Отправка...' : 'отправить код'}
-                    </Button>
+                        <Button
+                            mode="contained"
+                            style={styles.submitButton}
+                            labelStyle={styles.submitButtonLabel}
+                            contentStyle={styles.submitButtonContent}
+                            onPress={handleSendCode}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? 'Отправка...' : 'отправить код'}
+                        </Button>
 
-                    <Text style={styles.fieldLabel}>код</Text>
-                    <TextInput
-                        value={code}
-                        onChangeText={setCode}
-                        mode="outlined"
-                        style={styles.input}
-                        theme={inputTheme}
-                        outlineColor={COLORS.accent}
-                        activeOutlineColor={COLORS.accent}
-                        keyboardType="numeric"
-                    />
-                </View>
+                        <Text style={styles.fieldLabel}>код</Text>
+                        <TextInput
+                            value={code}
+                            onChangeText={setCode}
+                            mode="outlined"
+                            style={styles.input}
+                            theme={inputTheme}
+                            outlineColor={COLORS.accent}
+                            activeOutlineColor={COLORS.accent}
+                            keyboardType="numeric"
+                        />
+                    </View>
 
-                <View style={styles.bottomButtonContainer}>
-                    <Button
-                        mode="contained"
-                        onPress={handleNext}
-                        style={styles.nextButton}
-                        labelStyle={styles.nextButtonLabel}
-                        contentStyle={styles.nextButtonContent}
-                    >
-                        далее
-                    </Button>
+                    <View style={styles.bottomButtonContainer}>
+                        <Button
+                            mode="contained"
+                            onPress={handleNext}
+                            style={styles.nextButton}
+                            labelStyle={styles.nextButtonLabel}
+                            contentStyle={styles.nextButtonContent}
+                        >
+                            далее
+                        </Button>
+                    </View>
                 </View>
             </View>
-        </View>
+        // </TouchableWithoutFeedback>
     );
 }
 
-const createStyles = ({ width = 375, height = 812 } = {}) => StyleSheet.create({
+const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',

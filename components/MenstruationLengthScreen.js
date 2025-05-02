@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     View,
     StyleSheet,
@@ -26,7 +27,12 @@ const SIZES = {
     visibleItems: 5,
 };
 
-export default function CycleDurationScreen({ navigation }) {
+export default function CycleDurationScreen({route, navigation }) {
+    const { email, tempToken, cycleLength } = route.params;
+    console.log(email);
+    console.log(tempToken);
+    console.log(cycleLength);
+
     const [selectedDay, setSelectedDay] = useState(5);
     const [fontsLoaded, setFontsLoaded] = useState(false);
     const { width, height } = useWindowDimensions();
@@ -70,9 +76,31 @@ export default function CycleDurationScreen({ navigation }) {
         setSelectedDay(days[index]);
     };
 
-    const handleNavigate = () => {
+    // const handleNavigate = () => {
+    //     navigation.navigate('Home', {"email": email, "tempToken": tempToken, "cycleLength": cycleLength, "periodLength": selectedDay});
+    // };
+
+    const handleNavigate = async(useDefault = false) => {
+
+        const response = await fetch("http://knafchik.lan:5000/api/auth/register", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "email": email,
+                "tempToken": tempToken,
+                "cycleLength": cycleLength,
+                "periodLength": useDefault ? 0 : selectedDay
+            })
+        });
+
+        const data = await response.json();
+        console.log('Код подтверждён:', data);
+        await AsyncStorage.setItem('Token', data.token);
         navigation.navigate('Home');
-    };
+
+    }
 
     if (!fontsLoaded) {
         return (
@@ -148,7 +176,7 @@ export default function CycleDurationScreen({ navigation }) {
                 <View style={styles.dontKnowButtonContainer}>
                     <Button
                         mode="contained"
-                        onPress={handleNavigate}
+                        onPress={()=> handleNavigate (true)}
                         style={styles.dontKnowButton}
                         labelStyle={styles.dontKnowButtonLabel}
                         contentStyle={styles.dontKnowButtonContent}
@@ -161,7 +189,7 @@ export default function CycleDurationScreen({ navigation }) {
                 <View style={styles.bottomButtonContainer}>
                     <Button
                         mode="contained"
-                        onPress={handleNavigate}
+                        onPress={()=> handleNavigate(false)}
                         style={styles.startButton}
                         labelStyle={styles.startButtonLabel}
                         contentStyle={styles.startButtonContent}
