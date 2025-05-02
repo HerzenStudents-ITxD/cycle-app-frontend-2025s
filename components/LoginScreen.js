@@ -130,7 +130,7 @@ export default function LoginScreen({navigation}) {
     }
 
     return (
-        // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.container}>
                 <View style={styles.centeredContainer}>
                     <Text style={styles.title}>вход</Text>
@@ -187,7 +187,7 @@ export default function LoginScreen({navigation}) {
                     </View>
                 </View>
             </View>
-        // </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
     );
 }
 
