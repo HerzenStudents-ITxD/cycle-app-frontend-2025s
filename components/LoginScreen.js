@@ -130,64 +130,62 @@ export default function LoginScreen({navigation}) {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.container}>
-                <View style={styles.centeredContainer}>
-                    <Text style={styles.title}>вход</Text>
+        <View style={styles.container}>
+            <View style={styles.centeredContainer}>
+                <Text style={styles.title}>вход</Text>
 
-                    <View style={styles.contentContainer}>
-                        <Text style={styles.fieldLabel}>почта</Text>
-                        <TextInput
-                            autoFocus
-                            value={email}
-                            onChangeText={setEmail}
-                            mode="outlined"
-                            style={styles.input}
-                            theme={inputTheme}
-                            outlineColor={COLORS.accent}
-                            activeOutlineColor={COLORS.accent}
-                            autoCapitalize="none"
-                            keyboardType="email-address"
-                        />
+                <View style={styles.contentContainer}>
+                    <Text style={styles.fieldLabel}>почта</Text>
+                    <TextInput
+                        autoFocus
+                        value={email}
+                        onChangeText={setEmail}
+                        mode="outlined"
+                        style={styles.input}
+                        theme={inputTheme}
+                        outlineColor={COLORS.accent}
+                        activeOutlineColor={COLORS.accent}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                    />
 
-                        <Button
-                            mode="contained"
-                            style={styles.submitButton}
-                            labelStyle={styles.submitButtonLabel}
-                            contentStyle={styles.submitButtonContent}
-                            onPress={handleSendCode}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? 'Отправка...' : 'отправить код'}
-                        </Button>
+                    <Button
+                        mode="contained"
+                        style={styles.submitButton}
+                        labelStyle={styles.submitButtonLabel}
+                        contentStyle={styles.submitButtonContent}
+                        onPress={handleSendCode}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Отправка...' : 'отправить код'}
+                    </Button>
 
-                        <Text style={styles.fieldLabel}>код</Text>
-                        <TextInput
-                            value={code}
-                            onChangeText={setCode}
-                            mode="outlined"
-                            style={styles.input}
-                            theme={inputTheme}
-                            outlineColor={COLORS.accent}
-                            activeOutlineColor={COLORS.accent}
-                            keyboardType="numeric"
-                        />
-                    </View>
+                    <Text style={styles.fieldLabel}>код</Text>
+                    <TextInput
+                        value={code}
+                        onChangeText={setCode}
+                        mode="outlined"
+                        style={styles.input}
+                        theme={inputTheme}
+                        outlineColor={COLORS.accent}
+                        activeOutlineColor={COLORS.accent}
+                        keyboardType="numeric"
+                    />
+                </View>
 
-                    <View style={styles.bottomButtonContainer}>
-                        <Button
-                            mode="contained"
-                            onPress={handleNext}
-                            style={styles.nextButton}
-                            labelStyle={styles.nextButtonLabel}
-                            contentStyle={styles.nextButtonContent}
-                        >
-                            далее
-                        </Button>
-                    </View>
+                <View style={styles.bottomButtonContainer}>
+                    <Button
+                        mode="contained"
+                        onPress={handleNext}
+                        style={styles.nextButton}
+                        labelStyle={styles.nextButtonLabel}
+                        contentStyle={styles.nextButtonContent}
+                    >
+                        далее
+                    </Button>
                 </View>
             </View>
-        </TouchableWithoutFeedback>
+         </View>
     );
 }
 

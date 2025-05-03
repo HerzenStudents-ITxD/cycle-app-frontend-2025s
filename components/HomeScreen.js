@@ -17,15 +17,16 @@ const COLORS = {
     black: '#000000',
     white: '#FFFFFF',
     gray: '#888888',
+    pinkish: '#FABDC2',
 };
 
 // Настройка локали календаря
 LocaleConfig.locales['ru'] = {
-    monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-    monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
-    dayNames: ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'],
-    dayNamesShort: ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],
-    today: 'Сегодня',
+    monthNames: ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'],
+    monthNamesShort: ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'],
+    dayNames: ['понедельник','вторник','среда','четверг','пятница','суббота','воскресенье'],
+    dayNamesShort: ['пн','вт','ср','чт','пт','сб','вс'],
+    today: 'сегодня',
 };
 LocaleConfig.defaultLocale = 'ru';
 
@@ -36,23 +37,25 @@ const CalendarMemo = React.memo(({ styles }) => (
             futureScrollRange={4}
             scrollEnabled={true}
             showScrollIndicator={true}
-            firstDay={1}
+            firstDay={0}
             theme={{
                 backgroundColor: COLORS.white,
                 calendarBackground: COLORS.white,
-                textSectionTitleColor: COLORS.black,
+                textSectionTitleColor: COLORS.pinkish,
                 selectedDayBackgroundColor: COLORS.accent,
                 selectedDayTextColor: COLORS.white,
                 todayTextColor: COLORS.button,
                 dayTextColor: COLORS.black,
                 textDisabledColor: COLORS.gray,
-                monthTextColor: COLORS.black,
+                monthTextColor: COLORS.pinkish,
                 textDayFontFamily: 'Comfortaa-Regular',
                 textMonthFontFamily: 'Comfortaa-Regular',
                 textDayHeaderFontFamily: 'Comfortaa-Regular',
                 textSectionTitleFontFamily: 'Comfortaa-Regular',
                 textMonthFontSize: 21,
-                textDayFontSize: 19
+                textDayFontSize: 19,
+                dateTextColor: COLORS.black,
+                textDayHeaderFontSize: 14
             }}
             monthFormat={'MMMM'}
             style={styles.calendar}
