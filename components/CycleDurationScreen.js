@@ -195,8 +195,8 @@ const createStyles = ({ width, height }, itemHeight, visibleItems) => StyleSheet
         padding: 10,
     },
     backButtonImage: {
-        width: 24,
-        height: 24,
+        // width: 24,
+        // height: 24,
     },
     centeredContainer: {
         flex: 1,

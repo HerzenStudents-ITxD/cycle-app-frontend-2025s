@@ -88,20 +88,21 @@ const SettingsScreen = () => {
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-            <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => navigation.navigate('Home')}
-            >
-                <Image
-                    source={require('../assets/backButton.png')}
-                    style={[styles.backButtonImage, { tintColor: colors.text }]}
-                    resizeMode="contain"
-                />
-            </TouchableOpacity>
+            <View style={styles.headerContainer}>
+                <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => navigation.navigate('Home')}
+                >
+                    <Image
+                        source={require('../assets/backButton.png')}
+                        style={[styles.backButtonImage, { tintColor: colors.logoutText }]}
+                        resizeMode="contain"
+                    />
+                </TouchableOpacity>
+                <Text style={[styles.title, { color: colors.text }]}>настройки</Text>
+            </View>
 
             <View style={styles.centeredContainer}>
-                <Text style={[styles.title, { color: colors.text }]}>настройки</Text>
-
                 <View style={styles.contentContainer}>
                     {/* Длительность цикла */}
                     <View style={styles.settingRow}>
@@ -160,7 +161,15 @@ const SettingsScreen = () => {
                                 ]}
                                 onPress={() => setDarkTheme(false)}
                             >
-                                <Text style={[styles.themeButtonText, { color: !darkTheme ? colors.buttonTextActive : colors.buttonTextInactive }]}>
+                                <Text style={[
+                                    styles.themeButtonText,
+                                    {
+                                        color: !darkTheme ? colors.buttonTextActive : colors.buttonTextInactive,
+                                        textAlignVertical: 'center',
+                                        lineHeight: 30,
+
+                                    }
+                                ]}>
                                     светлая
                                 </Text>
                             </TouchableOpacity>
@@ -172,7 +181,14 @@ const SettingsScreen = () => {
                                 ]}
                                 onPress={() => setDarkTheme(true)}
                             >
-                                <Text style={[styles.themeButtonText, { color: darkTheme ? colors.buttonTextActive : colors.buttonTextInactive }]}>
+                                <Text style={[
+                                    styles.themeButtonText,
+                                    {
+                                        color: darkTheme ? colors.buttonTextActive : colors.buttonTextInactive,
+                                        textAlignVertical: 'center',
+                                        lineHeight: 30
+                                    }
+                                ]}>
                                     темная
                                 </Text>
                             </TouchableOpacity>
@@ -181,11 +197,9 @@ const SettingsScreen = () => {
                 </View>
 
                 {/* Кнопка выхода */}
-                <View style={styles.bottomButtonContainer}>
                     <TouchableOpacity onPress={confirmLogout}>
                         <Text style={[styles.logoutText, { color: colors.logoutText }]}>выйти</Text>
                     </TouchableOpacity>
-                </View>
             </View>
 
             {/* Модальное окно подтверждения выхода */}
@@ -222,16 +236,28 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    headerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: height * 0.10,
+        position: 'relative',
+        width: '100%',
+    },
     backButton: {
         position: 'absolute',
-        top: height * 0.15,
         left: 20,
-        zIndex: 10,
         padding: 10,
+        top: 2,
     },
     backButtonImage: {
-        width: 24,
-        height: 24,
+        // width: 24,
+        // height: 24,
+    },
+    title: {
+        fontSize: 33,
+        fontFamily: 'Comfortaa-Regular',
+        textAlign: 'center',
     },
     centeredContainer: {
         flex: 1,
@@ -239,14 +265,7 @@ const styles = StyleSheet.create({
         maxWidth: 400,
         alignSelf: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 20,
-    },
-    title: {
-        fontSize: 24,
-        marginTop: height * 0.15,
-        marginBottom: height * 0.04,
-        fontFamily: 'Comfortaa-Regular',
-        textAlign: 'center',
+        marginTop: height * 0.06,
     },
     contentContainer: {
         flex: 1,
@@ -260,13 +279,13 @@ const styles = StyleSheet.create({
     },
     settingLabel: {
         flex: 1,
-        fontSize: 18,
+        fontSize: 19,
         fontFamily: 'Comfortaa-Regular',
         marginRight: 15,
         textAlign: 'left',
     },
     numberInput: {
-        fontSize: 18,
+        fontSize: 19,
         fontFamily: 'Comfortaa-Regular',
         textAlign: 'center',
         minWidth: 60,
@@ -276,26 +295,34 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     themeButton: {
-        paddingVertical: 8,
+        paddingVertical: 0,
         paddingHorizontal: 15,
         borderRadius: 20,
         marginLeft: 10,
         borderWidth: 1,
+        height: 32,  // Убедитесь, что высота кнопки достаточна
+        justifyContent: 'center',  // Центрируем по вертикали
+        alignItems: 'center',  // Центрируем по горизонтали
     },
+
+    themeButtonText: {
+        fontSize: 19,
+        fontFamily: 'Comfortaa-Regular',
+        textAlign: 'center',  // По горизонтали
+        lineHeight: 32, // Устанавливаем высоту строки равной высоте кнопки, чтобы текст был в центре
+    },
+
     activeThemeButton: {
         borderWidth: 0,
     },
-    themeButtonText: {
-        fontSize: 18,
-        fontFamily: 'Comfortaa-Regular',
-    },
+
     bottomButtonContainer: {
         width: '100%',
         alignItems: 'flex-start',
         paddingLeft: 5,
     },
     logoutText: {
-        fontSize: 18,
+        fontSize: 19,
         fontFamily: 'Comfortaa-Regular',
         marginBottom: "15%",
     },
