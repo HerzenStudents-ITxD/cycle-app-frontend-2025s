@@ -185,14 +185,15 @@ export default function CycleDurationScreen({route, navigation }) {
 const createStyles = ({ width, height }, itemHeight, visibleItems) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.white,
+        backgroundColor: 'rgb(255,255,255)',
     },
     backButton: {
         position: 'absolute',
-        top: height * 0.15,
+        top: height * 0.1,
         left: 20,
         zIndex: 10,
         padding: 10,
+        // backgroundColor: 'rgb(10,34,34)',
     },
     backButtonImage: {
         // width: 24,
@@ -204,11 +205,11 @@ const createStyles = ({ width, height }, itemHeight, visibleItems) => StyleSheet
         maxWidth: 400,
         alignSelf: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 20,
+        // paddingVertical: 20,
     },
     title: {
         fontSize: 24,
-        marginTop: height * 0.15,
+        marginTop: height * 0.10,
         color: COLORS.black,
         fontFamily: 'Comfortaa-Regular',
         textAlign: 'center',

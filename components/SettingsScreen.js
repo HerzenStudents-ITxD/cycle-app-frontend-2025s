@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const COLORS = {
     light: {
@@ -72,6 +73,7 @@ const SettingsScreen = () => {
     };
 
     const handleLogout = () => {
+        AsyncStorage.removeItem('Token');
         setShowLogoutModal(false);
         navigation.navigate('Login');
     };

@@ -12,6 +12,8 @@ import SettingsScreen from './components/SettingsScreen';
 import LoginScreen from './components/LoginScreen';
 import CycleDurationScreen from './components/CycleDurationScreen';
 import MenstruationLengthScreen from "./components/MenstruationLengthScreen";
+import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +22,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
+
 
     // Загружаем шрифты
     useEffect(() => {
@@ -45,6 +49,33 @@ export default function App() {
         }
     }, [appIsReady]);
 
+    useEffect(() => {
+        const checkToken = async () => {
+            try {
+                const token = await AsyncStorage.getItem('Token');
+                if (token) {
+                    setIsLoggedIn(true);  // Если токен есть, считаем, что пользователь авторизован
+                } else {
+                    setIsLoggedIn(false); // Если токен нет, считаем, что нужно показать экран входа
+                }
+            } catch (error) {
+                console.error('Ошибка при проверке токена:', error);
+                setIsLoggedIn(false);  // В случае ошибки показываем экран входа
+            }
+        };
+        checkToken(); // Вызываем проверку токена
+    }, []); // Выполняется только один раз при старте приложения
+
+    // Если состояние isLoggedIn ещё не определено, показываем загрузочный экран
+    if (isLoggedIn === null) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+
+
     if (!appIsReady) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -53,12 +84,14 @@ export default function App() {
         );
     }
 
+    let headElement = isLoggedIn ? "Home" : "Login";
+
     return (
         <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
             <NavigationContainer>
                 <StatusBar style="auto" />
                 <Stack.Navigator
-                    initialRouteName="Login"
+                    initialRouteName={headElement}
                     screenOptions={{
                         headerShown: false,
                         headerTitleStyle: {
@@ -74,12 +107,7 @@ export default function App() {
                     <Stack.Screen
                         name="Login"
                         component={LoginScreen}
-                        // options={{
-                        //     title: 'Вход',
-                        //     headerTitleStyle: {
-                        //         fontFamily: 'Comfortaa-Bold',
-                        //     }
-                        // }}
+
                     />
                     <Stack.Screen
                         name="Home"

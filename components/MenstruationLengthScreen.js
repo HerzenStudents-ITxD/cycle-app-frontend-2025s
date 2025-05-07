@@ -12,6 +12,9 @@ import {
 } from 'react-native';
 import { Text, Button } from 'react-native-paper';
 import * as Font from 'expo-font';
+import { serverAddress } from '../constants/server_settings';
+
+
 
 const COLORS = {
     accent: '#FABDC2',
@@ -76,13 +79,11 @@ export default function CycleDurationScreen({route, navigation }) {
         setSelectedDay(days[index]);
     };
 
-    // const handleNavigate = () => {
-    //     navigation.navigate('Home', {"email": email, "tempToken": tempToken, "cycleLength": cycleLength, "periodLength": selectedDay});
-    // };
+
 
     const handleNavigate = async(useDefault = false) => {
 
-        const response = await fetch("http://knafchik.lan:5000/api/auth/register", {
+        const response = await fetch(`http://${serverAddress}/api/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -209,7 +210,7 @@ const createStyles = ({ width, height }, itemHeight, visibleItems) => StyleSheet
     },
     backButton: {
         position: 'absolute',
-        top: height * 0.15,
+        top: height * 0.1,
         left: 20,
         zIndex: 10,
         padding: 10,
@@ -224,11 +225,11 @@ const createStyles = ({ width, height }, itemHeight, visibleItems) => StyleSheet
         maxWidth: 400,
         alignSelf: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 20,
+        // paddingVertical: 20,
     },
     title: {
         fontSize: 24,
-        marginTop: height * 0.15,
+        marginTop: height * 0.1,
         color: COLORS.black,
         fontFamily: 'Comfortaa-Regular',
         textAlign: 'center',

@@ -44,13 +44,13 @@ const CalendarMemo = React.memo(({styles}) => {
         return (
             <View style={[
                 styles.dayContainer,
-                isSelected && styles.selectedDayContainer
+                isToday && styles.todayContainer, // Добавляем стиль для сегодняшней даты
             ]}>
                 <Text style={[
                     styles.dayText,
                     state === 'disabled' && styles.disabledDayText,
                     state === 'today' && styles.todayText,
-                    isSelected && styles.selectedDayText
+                    isToday && styles.todayDateText // Стиль для текста сегодняшней даты
                 ]}>
                     {date.day}
                 </Text>
@@ -61,7 +61,7 @@ const CalendarMemo = React.memo(({styles}) => {
     return (
         <View style={styles.calendarContainer}>
             <CalendarList
-                pastScrollRange={0}
+                pastScrollRange={2}
                 futureScrollRange={4}
                 scrollEnabled={true}
                 showScrollIndicator={true}
@@ -70,21 +70,20 @@ const CalendarMemo = React.memo(({styles}) => {
                 markedDates={{
                     [today]: {
                         selected: true,
-                        selectedColor: '#F9E3D6',
                         customStyles: {
                             container: {
                                 borderRadius: 20,
-                                backgroundColor: '#F9E3D6',
+                                backgroundColor: 'red', // Красный цвет для сегодняшней даты
                             },
                             text: {
-                                color: COLORS.black,
+                                color: COLORS.white, // Белый текст для контраста
                                 fontWeight: 'bold'
                             }
                         }
                     }
                 }}
                 theme={{
-                    calendarBackground: COLORS.accent,
+                    calendarBackground: COLORS.white,
                     textSectionTitleColor: COLORS.pinkish,
                     selectedDayBackgroundColor: COLORS.accent,
                     selectedDayTextColor: COLORS.white,
@@ -100,6 +99,8 @@ const CalendarMemo = React.memo(({styles}) => {
                     textDayFontSize: 19,
                     dateTextColor: COLORS.black,
                     textDayHeaderFontSize: 14,
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     'stylesheet.calendar.main': {
                         week: {
                             marginTop: 10,
@@ -197,7 +198,7 @@ const HomeScreen = React.memo(({navigation}) => {
     });
 
     return (
-        <>
+        <View style={{backgroundColor: COLORS.white, flex: 1}}>
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.dateText}>{today}</Text>
@@ -346,7 +347,7 @@ const HomeScreen = React.memo(({navigation}) => {
                     </Animated.View>
                 </>
             )}
-        </>
+        </View>
     );
 });
 
@@ -357,7 +358,7 @@ const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
         maxWidth: 400,
         alignSelf: 'center',
         justifyContent: 'space-between',
-        backgroundColor: COLORS.pinkish,
+        // backgroundColor: '#8f4720',
     },
     headerContainer: {
         flexDirection: 'row',
@@ -427,14 +428,20 @@ const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
         fontFamily: 'Comfortaa-Regular',
         color: COLORS.black,
     },
-    selectedDayContainer: {
-        backgroundColor: '#F9E3D6',
-    },
+
     disabledDayText: {
         color: COLORS.gray,
     },
     todayText: {
         color: COLORS.button,
+    },
+
+    todayContainer: {
+        backgroundColor: 'red',
+        borderRadius: 20,
+    },
+    todayDateText: {
+        color: COLORS.black,
     },
     selectedDayText: {
         color: COLORS.black,

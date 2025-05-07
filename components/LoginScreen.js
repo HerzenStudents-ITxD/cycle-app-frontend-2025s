@@ -3,6 +3,8 @@ import {View, StyleSheet, ActivityIndicator, useWindowDimensions, TouchableWitho
 import {Text, TextInput, Button} from 'react-native-paper';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { serverAddress } from '../constants/server_settings';
+
 
 const COLORS = {
     accent: '#F9E3D6',
@@ -56,7 +58,7 @@ export default function LoginScreen({navigation}) {
         }
         setIsLoading(true);
         try {
-            const response = await fetch("http://knafchik.lan:5000/api/auth/send-code", {
+            const response = await fetch(`http://${serverAddress}/api/auth/send-code`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,7 +93,7 @@ export default function LoginScreen({navigation}) {
             return;
         }
         try {
-            const response = await fetch("http://knafchik.lan:5000/api/auth/verify-code", {
+            const response = await fetch(`http://${serverAddress}/api/auth/verify-code`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
