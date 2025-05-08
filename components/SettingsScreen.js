@@ -50,9 +50,9 @@ const { width, height } = Dimensions.get('window');
 const SettingsScreen = () => {
     const navigation = useNavigation();
     const [fontsLoaded, setFontsLoaded] = useState(false);
-    const [cycleLength, setCycleLength] = useState('28');
-    const [menstruationLength, setMenstruationLength] = useState('5');
-    const [cycleVariation, setCycleVariation] = useState('1');
+    const [cycleLength, setCycleLength] = useState('?');
+    const [menstruationLength, setMenstruationLength] = useState('?');
+    const [cycleVariation, setCycleVariation] = useState('?');
     const [remindMenstruation, setRemindMenstruation] = useState(true);
     const [remindOvulation, setRemindOvulation] = useState(false);
     const [darkTheme, setDarkTheme] = useState(false);
@@ -74,6 +74,7 @@ const SettingsScreen = () => {
 
     const handleLogout = () => {
         AsyncStorage.removeItem('Token');
+        AsyncStorage.removeItem('UserId');
         setShowLogoutModal(false);
         navigation.navigate('Login');
     };

@@ -1,1 +1,1 @@
-export const serverAddress = 'localhost:5087'
+export const serverAddress = 'http://korobochka.lan:5087'

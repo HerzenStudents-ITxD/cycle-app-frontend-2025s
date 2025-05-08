@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ActivityIndicator, useWindowDimensions, TouchableWithoutFeedback, Keyboard} from 'react-native';
-import {Text, TextInput, Button} from 'react-native-paper';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, StyleSheet, useWindowDimensions, View} from 'react-native';
+import {Button, Text, TextInput} from 'react-native-paper';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { serverAddress } from '../constants/server_settings';
+import {serverAddress} from '../constants/server_settings';
+import {configNoAuth} from "../utils/ServerUtils";
+import {AuthApi} from "../api-client2";
 
 
 const COLORS = {
@@ -58,23 +60,17 @@ export default function LoginScreen({navigation}) {
         }
         setIsLoading(true);
         try {
-            const response = await fetch(`http://${serverAddress}/api/auth/send-code`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'text/plain',
-                },
-                body: JSON.stringify(email)
-            });
+            new AuthApi(configNoAuth).apiAuthAuthenticatePost(email).then(response => {
+                console.log(response);
+                if (response.status === 200) {
+                    console.log('Код отправлен на:', email);
+                    alert('Код отправлен на вашу почту');
+                }
+            }).catch(error => {
+                console.log(error)
+                alert('Ошибка при отправке кода: ' + error.message);
+            })
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('Код отправлен на:', email);
-            alert('Код отправлен на вашу почту');
         } catch (error) {
             console.error('Ошибка при отправке кода:', error);
             alert(error.message || 'Произошла ошибка при отправке кода');
@@ -93,30 +89,22 @@ export default function LoginScreen({navigation}) {
             return;
         }
         try {
-            const response = await fetch(`http://${serverAddress}/api/auth/verify-code`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    "email": email,
-                    "code": code,
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || `Неверный код. Статус: ${response.status}`);
-            }
-
-            const data = await response.json();
-            console.log('Код подтверждён:', data);
-            if (!data.isNewUser) {
-                await AsyncStorage.setItem('Token', data.token);
-                navigation.navigate('Home');
-            } else {
-                navigation.navigate('CycleDuration', {"email": email, "token": data.token});
-            }
+            new AuthApi(configNoAuth).apiAuthVerifyPost({ email: email, code: code }).then((resp) => {
+                if (resp.status === 200) {
+                    const data = resp.data;
+                    console.log('Код подтверждён:', data);
+                    if (!data.isNewUser) {
+                        AsyncStorage.setItem('Token', data.token);
+                        AsyncStorage.setItem('UserId', data.userId);
+                        navigation.navigate('Home');
+                    } else {
+                        navigation.navigate('CycleDuration', {"email": email, "token": data.token} );
+                    }
+                }
+            }).catch(error => {
+                console.log(error)
+                alert(error.response.data.message || `Неверный код. Статус: ${error.message}`);
+            })
         } catch (error) {
             console.error('Ошибка при проверке кода:', error);
             alert(error.message || 'Что-то пошло не так');

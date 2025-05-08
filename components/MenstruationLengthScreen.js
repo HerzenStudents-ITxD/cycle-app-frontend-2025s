@@ -13,6 +13,8 @@ import {
 import { Text, Button } from 'react-native-paper';
 import * as Font from 'expo-font';
 import { serverAddress } from '../constants/server_settings';
+import {AuthApi} from "../api-client2";
+import {configAuth, configNoAuth} from "../utils/ServerUtils";
 
 
 
@@ -81,27 +83,48 @@ export default function CycleDurationScreen({route, navigation }) {
 
 
 
-    const handleNavigate = async(useDefault = false) => {
-
-        const response = await fetch(`http://${serverAddress}/api/auth/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "email": email,
-                "tempToken": tempToken,
-                "cycleLength": cycleLength,
-                "periodLength": useDefault ? 0 : selectedDay
+    // const handleNavigate = async(useDefault = false) => {
+    //
+    //     const response = await fetch(`http://${serverAddress}/api/auth/register`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             "email": email,
+    //             "tempToken": tempToken,
+    //             "cycleLength": cycleLength,
+    //             "periodLength": useDefault ? 0 : selectedDay
+    //         })
+    //     });
+    //
+    //     const data = await response.json();
+    //     console.log('Код подтверждён:', data);
+    //     await AsyncStorage.setItem('Token', data.token);
+    //     navigation.navigate('Home');
+    //
+    // }
+    const handleNavigate = async (useDefault = false) => {
+        try {
+            new AuthApi(configNoAuth).apiAuthCompleteRegistrationPost(
+                {token: tempToken, cycleLength: cycleLength, periodLength: (useDefault ? 0 : selectedDay)}
+            ).then((resp) => {
+                if (resp.status === 200) {
+                    const data = resp.data;
+                    AsyncStorage.setItem('Token', data.token);
+                    AsyncStorage.setItem('UserId', data.userId);
+                    console.log('Регистрация выполнена:', data);
+                    navigation.navigate('Home');
+                }
+            }).catch(error => {
+                console.log(error)
+                alert(error.response.data.message || `Ошибка. Статус: ${error.message}`);
             })
-        });
-
-        const data = await response.json();
-        console.log('Код подтверждён:', data);
-        await AsyncStorage.setItem('Token', data.token);
-        navigation.navigate('Home');
-
-    }
+        } catch (error) {
+            console.error('Ошибка при регистрации:', error);
+            alert(error.message || 'Что-то пошло не так');
+        }
+    };
 
     if (!fontsLoaded) {
         return (
