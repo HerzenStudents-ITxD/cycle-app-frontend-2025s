@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-    View,
+    ActivityIndicator,
+    Dimensions,
+    Image,
+    Modal,
     StyleSheet,
     Switch,
-    TouchableOpacity,
-    Image,
-    ActivityIndicator,
     Text,
-    Modal,
-    Dimensions
+    TouchableOpacity,
+    View
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import * as Font from 'expo-font';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {UsersApi} from "../api-client2";
+import {getConfigAuth} from "../utils/ServerUtils";
 
 const COLORS = {
     light: {
@@ -53,10 +55,55 @@ const SettingsScreen = () => {
     const [cycleLength, setCycleLength] = useState('?');
     const [menstruationLength, setMenstruationLength] = useState('?');
     const [cycleVariation, setCycleVariation] = useState('?');
-    const [remindMenstruation, setRemindMenstruation] = useState(true);
-    const [remindOvulation, setRemindOvulation] = useState(false);
+    const [remindMenstruation, setRemindMenstruation] = useState(undefined);
+    const [remindOvulation, setRemindOvulation] = useState(undefined);
     const [darkTheme, setDarkTheme] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+    const [settingsLoaded, setSettingsLoaded] = useState(false);
+
+    function refreshStats() {
+        getConfigAuth().then((config) => {
+            AsyncStorage.getItem('UserId')
+                .then((userId) => {
+                    new UsersApi(config).apiUsersUserIdGet(userId)
+                        .then((response) => {
+                            console.log(response);
+                            setSettingsLoaded(true);
+                            let data = response.data;
+                            setCycleLength(data.cycleLength);
+                            setMenstruationLength(data.periodLength);
+                            setRemindOvulation(data.remindOvulation);
+                            setRemindMenstruation(data.remindPeriod)
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            if (error.status === 401 || error.status === 403) {
+                                handleLogout()
+                            }
+                            alert("Чёто пошло не так, перелогиньсо, a?")
+                        })
+                }).catch((error) => {
+                console.log(error);
+                alert("Чёто пошло не так, перелогиньсо")
+            })
+        })
+    }
+
+    function uploadStats() {
+        getConfigAuth().then((config) => {
+            AsyncStorage.getItem('UserId').then((userId) => {
+                new UsersApi(config).apiUsersUserIdPut(userId, {
+                    cycleLength: cycleLength,
+                    periodLength: menstruationLength,
+                    remindPeriod: remindMenstruation,
+                    remindOvulation: remindOvulation,
+                }, (response) => {
+                    console.log(response);
+                })
+            })
+        })
+    }
 
     useEffect(() => {
         (async () => {
@@ -65,8 +112,17 @@ const SettingsScreen = () => {
                 'Comfortaa-Bold': require('../assets/fonts/Comfortaa-Bold.ttf'),
             });
             setFontsLoaded(true);
+            refreshStats();
         })();
     }, []);
+
+    useEffect(() => {
+        if (!settingsLoaded) {
+            return
+        }
+        uploadStats()
+    }, [remindMenstruation, remindOvulation])
+
 
     const confirmLogout = () => {
         setShowLogoutModal(true);

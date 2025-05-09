@@ -6,7 +6,15 @@ export const configNoAuth = new Configuration({
     basePath: serverAddress,
 })
 
-export const configAuth = new Configuration({
-    basePath: serverAddress,
-    accessToken: () => 'Bearer ' + AsyncStorage.getItem('Token'),
-})
+
+export const getConfigAuth = async () => {
+    const token = await AsyncStorage.getItem('Token');
+    return new Configuration({
+        basePath: serverAddress,
+        baseOptions: {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        },
+    });
+};

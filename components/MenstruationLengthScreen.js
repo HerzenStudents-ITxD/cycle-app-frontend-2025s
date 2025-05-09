@@ -1,21 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-    View,
-    StyleSheet,
     ActivityIndicator,
-    useWindowDimensions,
     FlatList,
-    Text as RNText,
     Image,
-    TouchableOpacity
+    StyleSheet,
+    Text as RNText,
+    TouchableOpacity,
+    useWindowDimensions,
+    View
 } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import {Button, Text} from 'react-native-paper';
 import * as Font from 'expo-font';
-import { serverAddress } from '../constants/server_settings';
 import {AuthApi} from "../api-client2";
 import {configAuth, configNoAuth} from "../utils/ServerUtils";
-
 
 
 const COLORS = {
