@@ -62,47 +62,53 @@ const SettingsScreen = () => {
 
     const [settingsLoaded, setSettingsLoaded] = useState(false);
 
-    function refreshStats() {
-        getConfigAuth().then((config) => {
-            AsyncStorage.getItem('UserId')
-                .then((userId) => {
-                    new UsersApi(config).apiUsersUserIdGet(userId)
-                        .then((response) => {
-                            console.log(response);
-                            setSettingsLoaded(true);
-                            let data = response.data;
-                            setCycleLength(data.cycleLength);
-                            setMenstruationLength(data.periodLength);
-                            setRemindOvulation(data.remindOvulation);
-                            setRemindMenstruation(data.remindPeriod)
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                            if (error.status === 401 || error.status === 403) {
-                                handleLogout()
-                            }
-                            alert("Чёто пошло не так, перелогиньсо, a?")
-                        })
-                }).catch((error) => {
+    async function refreshStats() {
+
+        let config = await getConfigAuth()
+            .catch(err => { console.error(err); handleLogout() });
+
+        let userId = await AsyncStorage.getItem('UserId')
+            .catch(err => { console.error(err); handleLogout() });
+
+        let request = new UsersApi(config).apiUsersUserIdGet(userId)
+            .catch((error) => {
                 console.log(error);
-                alert("Чёто пошло не так, перелогиньсо")
+                if (error.status === 401 || error.status === 403) {
+                    handleLogout()
+                }
             })
+
+        request.then((response) => {
+            console.log(response);
+            setSettingsLoaded(true);
+            let data = response.data;
+            setCycleLength(data.cycleLength);
+            setMenstruationLength(data.periodLength);
+            setRemindOvulation(data.remindOvulation);
+            setRemindMenstruation(data.remindPeriod)
         })
     }
 
-    function uploadStats() {
-        getConfigAuth().then((config) => {
-            AsyncStorage.getItem('UserId').then((userId) => {
-                new UsersApi(config).apiUsersUserIdPut(userId, {
-                    cycleLength: cycleLength,
-                    periodLength: menstruationLength,
-                    remindPeriod: remindMenstruation,
-                    remindOvulation: remindOvulation,
-                }, (response) => {
-                    console.log(response);
-                })
-            })
+    async function uploadStats() {
+        let config = await getConfigAuth()
+            .catch(err => { console.error(err); handleLogout() });
+
+        let userId = await AsyncStorage.getItem('UserId')
+            .catch(err => { console.error(err); handleLogout() });
+
+        let request = new UsersApi(config).apiUsersUserIdPut(userId, {
+            cycleLength: cycleLength,
+            periodLength: menstruationLength,
+            remindPeriod: remindMenstruation,
+            remindOvulation: remindOvulation,
+        }).catch((error) => {
+            console.log(error);
+            if (error.status === 401 || error.status === 403) {
+                handleLogout()
+            }
         })
+
+        request.then(response => console.log(response));
     }
 
     useEffect(() => {
