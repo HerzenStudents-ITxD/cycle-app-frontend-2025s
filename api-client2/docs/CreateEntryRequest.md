@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **periodEnded** | **boolean** |  | [optional] [default to undefined]
 **note** | **string** |  | [optional] [default to undefined]
 **heaviness** | **string** |  | [optional] [default to undefined]
-**symptoms** | **string** |  | [optional] [default to undefined]
+**symptoms** | [**Array&lt;SymptomRequest&gt;**](SymptomRequest.md) |  | [optional] [default to undefined]
 **sex** | **string** |  | [optional] [default to undefined]
 **mood** | **string** |  | [optional] [default to undefined]
 **discharges** | **string** |  | [optional] [default to undefined]

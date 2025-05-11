@@ -5,9 +5,10 @@ All URIs are relative to *http://localhost*
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**apiEntriesByDateRangeGet**](#apientriesbydaterangeget) | **GET** /api/Entries/by-date-range | |
-|[**apiEntriesEntryIdDelete**](#apientriesentryiddelete) | **DELETE** /api/Entries/{entryId} | |
+|[**apiEntriesCurrentPeriodGet**](#apientriescurrentperiodget) | **GET** /api/Entries/current-period | |
 |[**apiEntriesEntryIdGet**](#apientriesentryidget) | **GET** /api/Entries/{entryId} | |
-|[**apiEntriesEntryIdPut**](#apientriesentryidput) | **PUT** /api/Entries/{entryId} | |
+|[**apiEntriesIdDelete**](#apientriesiddelete) | **DELETE** /api/Entries/{id} | |
+|[**apiEntriesIdPut**](#apientriesidput) | **PUT** /api/Entries/{id} | |
 |[**apiEntriesPost**](#apientriespost) | **POST** /api/Entries | |
 
 # **apiEntriesByDateRangeGet**
@@ -27,12 +28,10 @@ const apiInstance = new EntriesApi(configuration);
 
 let startDate: string; // (optional) (default to undefined)
 let endDate: string; // (optional) (default to undefined)
-let userId: string; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.apiEntriesByDateRangeGet(
     startDate,
-    endDate,
-    userId
+    endDate
 );
 ```
 
@@ -42,7 +41,6 @@ const { status, data } = await apiInstance.apiEntriesByDateRangeGet(
 |------------- | ------------- | ------------- | -------------|
 | **startDate** | [**string**] |  | (optional) defaults to undefined|
 | **endDate** | [**string**] |  | (optional) defaults to undefined|
-| **userId** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type
@@ -66,8 +64,8 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **apiEntriesEntryIdDelete**
-> apiEntriesEntryIdDelete()
+# **apiEntriesCurrentPeriodGet**
+> apiEntriesCurrentPeriodGet()
 
 
 ### Example
@@ -81,18 +79,11 @@ import {
 const configuration = new Configuration();
 const apiInstance = new EntriesApi(configuration);
 
-let entryId: string; // (default to undefined)
-
-const { status, data } = await apiInstance.apiEntriesEntryIdDelete(
-    entryId
-);
+const { status, data } = await apiInstance.apiEntriesCurrentPeriodGet();
 ```
 
 ### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **entryId** | [**string**] |  | defaults to undefined|
+This endpoint does not have any parameters.
 
 
 ### Return type
@@ -131,7 +122,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new EntriesApi(configuration);
 
-let entryId: string; // (default to undefined)
+let entryId: number; // (default to undefined)
 
 const { status, data } = await apiInstance.apiEntriesEntryIdGet(
     entryId
@@ -142,7 +133,7 @@ const { status, data } = await apiInstance.apiEntriesEntryIdGet(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **entryId** | [**string**] |  | defaults to undefined|
+| **entryId** | [**number**] |  | defaults to undefined|
 
 
 ### Return type
@@ -166,8 +157,58 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **apiEntriesEntryIdPut**
-> apiEntriesEntryIdPut()
+# **apiEntriesIdDelete**
+> apiEntriesIdDelete()
+
+
+### Example
+
+```typescript
+import {
+    EntriesApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new EntriesApi(configuration);
+
+let id: number; // (default to undefined)
+
+const { status, data } = await apiInstance.apiEntriesIdDelete(
+    id
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **id** | [**number**] |  | defaults to undefined|
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **apiEntriesIdPut**
+> apiEntriesIdPut()
 
 
 ### Example
@@ -182,11 +223,11 @@ import {
 const configuration = new Configuration();
 const apiInstance = new EntriesApi(configuration);
 
-let entryId: string; // (default to undefined)
+let id: number; // (default to undefined)
 let updateEntryRequest: UpdateEntryRequest; // (optional)
 
-const { status, data } = await apiInstance.apiEntriesEntryIdPut(
-    entryId,
+const { status, data } = await apiInstance.apiEntriesIdPut(
+    id,
     updateEntryRequest
 );
 ```
@@ -196,7 +237,7 @@ const { status, data } = await apiInstance.apiEntriesEntryIdPut(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **updateEntryRequest** | **UpdateEntryRequest**|  | |
-| **entryId** | [**string**] |  | defaults to undefined|
+| **id** | [**number**] |  | defaults to undefined|
 
 
 ### Return type

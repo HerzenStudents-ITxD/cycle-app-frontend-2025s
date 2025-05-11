@@ -4,11 +4,11 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**apiUsersUserIdGet**](#apiusersuseridget) | **GET** /api/Users/{userId} | |
-|[**apiUsersUserIdPut**](#apiusersuseridput) | **PUT** /api/Users/{userId} | |
+|[**apiUsersGet**](#apiusersget) | **GET** /api/Users | |
+|[**apiUsersPut**](#apiusersput) | **PUT** /api/Users | |
 
-# **apiUsersUserIdGet**
-> apiUsersUserIdGet()
+# **apiUsersGet**
+> apiUsersGet()
 
 
 ### Example
@@ -22,18 +22,11 @@ import {
 const configuration = new Configuration();
 const apiInstance = new UsersApi(configuration);
 
-let userId: string; // (default to undefined)
-
-const { status, data } = await apiInstance.apiUsersUserIdGet(
-    userId
-);
+const { status, data } = await apiInstance.apiUsersGet();
 ```
 
 ### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **userId** | [**string**] |  | defaults to undefined|
+This endpoint does not have any parameters.
 
 
 ### Return type
@@ -57,8 +50,8 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **apiUsersUserIdPut**
-> apiUsersUserIdPut()
+# **apiUsersPut**
+> apiUsersPut()
 
 
 ### Example
@@ -73,11 +66,9 @@ import {
 const configuration = new Configuration();
 const apiInstance = new UsersApi(configuration);
 
-let userId: string; // (default to undefined)
 let updateUserRequest: UpdateUserRequest; // (optional)
 
-const { status, data } = await apiInstance.apiUsersUserIdPut(
-    userId,
+const { status, data } = await apiInstance.apiUsersPut(
     updateUserRequest
 );
 ```
@@ -87,7 +78,6 @@ const { status, data } = await apiInstance.apiUsersUserIdPut(
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **updateUserRequest** | **UpdateUserRequest**|  | |
-| **userId** | [**string**] |  | defaults to undefined|
 
 
 ### Return type

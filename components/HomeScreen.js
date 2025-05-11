@@ -11,9 +11,12 @@ import {
     ScrollView,
     TextInput,
     Keyboard,
-    LayoutAnimation, UIManager,
+    LayoutAnimation, UIManager,Dimensions,FlatList,
 } from 'react-native';
-import {CalendarList, LocaleConfig} from 'react-native-calendars';
+import {Calendar} from "react-native-calendars";
+import {toIsoString, generateDaysBetween} from '../DateUtils';
+
+
 
 const COLORS = {
     accent: '#F9E3D6',
@@ -24,112 +27,14 @@ const COLORS = {
     pinkish: '#FABDC2',
 };
 
-// Настройка локали календаря
-LocaleConfig.locales['ru'] = {
-    monthNames: ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
-    monthNamesShort: ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
-    dayNames: ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье'],
-    dayNamesShort: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
-    today: 'сегодня',
-};
-LocaleConfig.defaultLocale = 'ru';
+let options = [
+    ['всё хорошо', 'диарея', 'спазмы в животе', 'усталость', 'прыщи', 'боль в спине', 'чувствительность груди', 'вздутие', 'тошнота', 'головная боль', 'озноб', 'температура'],
+    ['весёлое', 'спокойное', 'энергичное', 'игривое', 'переменчивое', 'грустное', 'безразличное', 'злое', 'возбуждённое', 'вдохновлённое', 'унылое', 'тревожное', 'депрессивное'],
+    ['нет', 'пятнистые', 'липкие', 'кремообразные', 'слизистые', 'водянистые', 'аномальные'],
+    ['лёгкие', 'средние', 'обильные'],
+    ['нет', 'щащищённый', 'незащищённый', 'сильное желание', 'мастурбация']
+]
 
-const CalendarMemo = React.memo(({styles}) => {
-    const today = new Date().toISOString().split('T')[0];
-
-    const DayComponent = ({date, state, marking}) => {
-        const isToday = date.dateString === today;
-        const isSelected = marking?.selected;
-
-        return (
-            <View style={[
-                styles.dayContainer,
-                isToday && styles.todayContainer, // Добавляем стиль для сегодняшней даты
-            ]}>
-                <Text style={[
-                    styles.dayText,
-                    state === 'disabled' && styles.disabledDayText,
-                    state === 'today' && styles.todayText,
-                    isToday && styles.todayDateText // Стиль для текста сегодняшней даты
-                ]}>
-                    {date.day}
-                </Text>
-            </View>
-        );
-    };
-
-    return (
-        <View style={styles.calendarContainer}>
-            <CalendarList
-                pastScrollRange={2}
-                futureScrollRange={4}
-                scrollEnabled={true}
-                showScrollIndicator={true}
-                firstDay={0}
-                dayComponent={DayComponent}
-                markedDates={{
-                    [today]: {
-                        selected: true,
-                        customStyles: {
-                            container: {
-                                borderRadius: 20,
-                                backgroundColor: 'red', // Красный цвет для сегодняшней даты
-                            },
-                            text: {
-                                color: COLORS.white, // Белый текст для контраста
-                                fontWeight: 'bold'
-                            }
-                        }
-                    }
-                }}
-                theme={{
-                    calendarBackground: COLORS.white,
-                    textSectionTitleColor: COLORS.pinkish,
-                    selectedDayBackgroundColor: COLORS.accent,
-                    selectedDayTextColor: COLORS.white,
-                    todayTextColor: COLORS.button,
-                    dayTextColor: COLORS.black,
-                    textDisabledColor: COLORS.gray,
-                    monthTextColor: COLORS.pinkish,
-                    textDayFontFamily: 'Comfortaa-Regular',
-                    textMonthFontFamily: 'Comfortaa-Regular',
-                    textDayHeaderFontFamily: 'Comfortaa-Regular',
-                    textSectionTitleFontFamily: 'Comfortaa-Regular',
-                    textMonthFontSize: 21,
-                    textDayFontSize: 19,
-                    dateTextColor: COLORS.black,
-                    textDayHeaderFontSize: 14,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    'stylesheet.calendar.main': {
-                        week: {
-                            marginTop: 10,
-                            marginBottom: 10,
-                            flexDirection: 'row',
-                            justifyContent: 'space-around'
-                        },
-                        dayContainer: {
-                            width: 40,
-                            height: 40,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }
-                    },
-                    'stylesheet.calendar.header': {
-                        week: {
-                            marginTop: 10,
-                            marginBottom: 10,
-                            flexDirection: 'row',
-                            justifyContent: 'space-around'
-                        }
-                    }
-                }}
-                monthFormat={'MMMM'}
-                style={styles.calendar}
-            />
-        </View>
-    );
-});
 
 const HomeScreen = React.memo(({navigation}) => {
     const {width, height} = useWindowDimensions();
@@ -138,9 +43,12 @@ const HomeScreen = React.memo(({navigation}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const modalAnim = useRef(new Animated.Value(0)).current;
     const [isNotesFocused, setIsNotesFocused] = useState(false);
-    const [selectedOptions, setSelectedOptions] = useState(Array(5).fill(null));
-
+    const [selectedOptions, setSelectedOptions] = useState([[], null, null, null, null]);
     const [menstruationStatus, setMenstruationStatus] = useState("менструация началась");  // Состояние для текста
+    const [dateModalVisible, setDateModalVisible] = useState(false);
+    const [selectedDate, setSelectedDate] = useState('');
+    const dateModalAnim = useRef(new Animated.Value(0)).current;
+
 
 
     const today = useMemo(() => (
@@ -149,6 +57,13 @@ const HomeScreen = React.memo(({navigation}) => {
             month: 'long',
         })
     ), []);
+
+
+
+    let dates = generateMonths(5, [ {start: new Date(), finish: new Date("2025-06-15")} ]);
+
+
+
 
     const openModal = useCallback(() => {
         setModalVisible(true);
@@ -168,6 +83,30 @@ const HomeScreen = React.memo(({navigation}) => {
         }).start(() => setModalVisible(false));
     }, [modalAnim]);
 
+    const openDateModal = useCallback((date) => {
+        setSelectedDate(date);
+        setDateModalVisible(true);
+        dateModalAnim.setValue(0);
+        Animated.timing(dateModalAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+        }).start();
+    }, [dateModalAnim]);
+
+    const closeDateModal = useCallback(() => {
+        Animated.timing(dateModalAnim, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+        }).start(() => setDateModalVisible(false));
+    }, [dateModalAnim]);
+
+    const dateModalTranslateY = dateModalAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [height, 0],
+    });
+
     const handleAddButtonPress = useCallback(() => {
         setTimeout(() => {
             openModal();  // Ждем немного перед запуском анимации
@@ -181,10 +120,23 @@ const HomeScreen = React.memo(({navigation}) => {
     const handleOptionPress = useCallback((rowIndex, optionIndex) => {
         setSelectedOptions(prev => {
             const newOptions = [...prev];
-            newOptions[rowIndex] = newOptions[rowIndex] === optionIndex ? null : optionIndex;
+
+            if (rowIndex > 0) {
+                newOptions[rowIndex] = (newOptions[rowIndex] === optionIndex) ? null : optionIndex;
+            } else {
+                //мультивыбор
+                const current = newOptions[rowIndex] || [];
+                const alreadySelected = current.includes(optionIndex);
+
+                newOptions[rowIndex] = alreadySelected
+                    ? current.filter(i => i !== optionIndex)
+                    : [...current, optionIndex];
+            }
+
             return newOptions;
         });
     }, []);
+
 
     const handleMenstruationStatusPress = useCallback(() => {
         setMenstruationStatus(prevStatus =>
@@ -196,6 +148,8 @@ const HomeScreen = React.memo(({navigation}) => {
         inputRange: [0, 1],
         outputRange: [height, 0],
     });
+
+
 
     return (
         <View style={{backgroundColor: COLORS.white, flex: 1}}>
@@ -233,9 +187,24 @@ const HomeScreen = React.memo(({navigation}) => {
                         resizeMode="contain"
                     />
                 </TouchableOpacity>
-
-                <CalendarMemo styles={styles}/>
+                <FlatList
+                    data={dates}
+                    keyExtractor={(item) => { return item.key } }
+                    renderItem={({ item }) => (
+                        <Calendar
+                            markedDates={item.markings}
+                            markingType={'period'}
+                            current={item.key}
+                            firstDay={1}
+                            hideArrows={true}
+                            hideExtraDays={true}
+                            onDayPress={(day) => openDateModal(day.dateString)}
+                        />
+                    )}
+                />
             </View>
+
+
 
             {modalVisible && (
                 <>
@@ -281,13 +250,7 @@ const HomeScreen = React.memo(({navigation}) => {
                                 </View>
 
                                 <View style={styles.optionsColumn}>
-                                    {[
-                                        ['всё хорошо', 'диарея', 'спазмы в животе', 'усталость', 'прыщи', 'боль в спине', 'чувствительность груди', 'вздутие', 'тошнота', 'головная боль', 'озноб', 'температура'],
-                                        ['весёлое', 'спокойное', 'энергичное', 'игривое', 'переменчивое', 'грустное', 'безразличное', 'злое', 'возбуждённое', 'вдохновлённое', 'унылое', 'тревожное', 'депрессивное'],
-                                        ['нет', 'пятнистые', 'липкие', 'кремообразные', 'слизистые', 'водянистые', 'аномальные'],
-                                        ['лёгкие', 'средние', 'обильные'],
-                                        ['нет', 'щащищённый', 'незащищённый', 'сильное желание', 'мастурбация']
-                                    ].map((options, rowIndex) => (
+                                    {options.map((options, rowIndex) => (
                                         <ScrollView
                                             key={rowIndex}
                                             horizontal
@@ -295,23 +258,31 @@ const HomeScreen = React.memo(({navigation}) => {
                                             style={styles.optionScrollView}
                                             contentContainerStyle={styles.optionScrollContent}
                                         >
-                                            {options.map((option, optionIndex) => (
-                                                <TouchableOpacity
-                                                    key={optionIndex}
-                                                    style={[
-                                                        styles.optionItem,
-                                                        selectedOptions[rowIndex] === optionIndex && styles.optionItemSelected
-                                                    ]}
-                                                    onPress={() => handleOptionPress(rowIndex, optionIndex)}
-                                                >
-                                                    <Text style={[
-                                                        styles.optionText,
-                                                        selectedOptions[rowIndex] === optionIndex && styles.optionTextSelected
-                                                    ]}>
-                                                        {option}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            ))}
+                                            {options.map((option, optionIndex) => {
+                                                const isSelected =
+                                                    rowIndex === 0
+                                                        ?  selectedOptions[rowIndex]?.includes(optionIndex)
+                                                        : selectedOptions[rowIndex] === optionIndex;
+
+                                                return (
+                                                    <TouchableOpacity
+                                                        key={optionIndex}
+                                                        style={[
+                                                            styles.optionItem,
+                                                            isSelected && styles.optionItemSelected
+                                                        ]}
+                                                        onPress={() => handleOptionPress(rowIndex, optionIndex)}
+                                                    >
+                                                        <Text style={[
+                                                            styles.optionText,
+                                                            isSelected && styles.optionTextSelected
+                                                        ]}>
+                                                            {option}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                );
+                                            })}
+
                                         </ScrollView>
                                     ))}
                                 </View>
@@ -347,18 +318,107 @@ const HomeScreen = React.memo(({navigation}) => {
                     </Animated.View>
                 </>
             )}
+
+            {dateModalVisible && (
+                <>
+                    <TouchableWithoutFeedback onPress={closeDateModal}>
+                        <View style={[StyleSheet.absoluteFill, styles.modalBackdrop]}/>
+                    </TouchableWithoutFeedback>
+                    <Animated.View
+                        style={[
+                            styles.dateModalContent,
+                            {transform: [{translateY: dateModalTranslateY}]},
+                        ]}
+                    >
+                        <Text style={styles.dateModalText}>
+                            {new Date(selectedDate).toLocaleDateString('ru-RU', {
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric'
+                            })}
+                        </Text>
+                        <TouchableOpacity
+                            style={styles.dateModalCloseButton}
+                            onPress={closeDateModal}
+                        >
+                            <Text style={styles.dateModalCloseText}>Закрыть</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                </>
+            )}
         </View>
     );
 });
 
 const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
+
+    monthHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    monthTitle: {
+        fontSize: 18,
+        fontFamily: 'Comfortaa-Regular',
+        color: COLORS.black,
+    },
+    navButton: {
+        fontSize: 20,
+        paddingHorizontal: 15,
+        color: COLORS.black,
+    },
+    daysHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 10,
+    },
+    dayNameContainer: {
+        width: 30,
+        alignItems: 'center',
+    },
+    dayNameText: {
+        fontSize: 14,
+        fontFamily: 'Comfortaa-Regular',
+        color: COLORS.gray,
+    },
+    daysContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-start',
+    },
+    dayContainer: {
+        width: 30,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 5,
+    },
+    emptyDay: {
+        width: 30,
+        height: 30,
+        margin: 5,
+    },
+    dayText: {
+        fontSize: 16,
+        fontFamily: 'Comfortaa-Regular',
+        color: COLORS.black,
+    },
+    todayContainer: {
+        backgroundColor: COLORS.pinkish,
+        borderRadius: 15,
+    },
+    todayText: {
+        color: COLORS.white,
+    },
     container: {
-        flex: 1,
-        width: width * 0.8,
+        // flex: 1,
+        width: width * 0.9,
         maxWidth: 400,
         alignSelf: 'center',
         justifyContent: 'space-between',
-        // backgroundColor: '#8f4720',
+        backgroundColor: '#8f4720',
+        height: '100%'
     },
     headerContainer: {
         flexDirection: 'row',
@@ -368,6 +428,7 @@ const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
         marginBottom: 20,
         position: 'relative',
         width: '100%',
+        backgroundColor: 'rgb(153,161,90)',
     },
     dateText: {
         fontSize: 33,
@@ -413,51 +474,12 @@ const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
         alignSelf: 'center',
         zIndex: 2,
         marginTop: 10,
+        marginBottom: -25,
         padding: 0,
         position: 'relative',
     },
-    dayContainer: {
-        width: 40,
-        height: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 20,
-    },
-    dayText: {
-        fontSize: 19,
-        fontFamily: 'Comfortaa-Regular',
-        color: COLORS.black,
-    },
 
-    disabledDayText: {
-        color: COLORS.gray,
-    },
-    todayText: {
-        color: COLORS.button,
-    },
 
-    todayContainer: {
-        backgroundColor: 'red',
-        borderRadius: 20,
-    },
-    todayDateText: {
-        color: COLORS.black,
-    },
-    selectedDayText: {
-        color: COLORS.black,
-        fontWeight: 'regular',
-    },
-    calendarContainer: {
-        width: '100%',
-        alignItems: 'center',
-        zIndex: 1,
-        marginTop: -25,
-        // backgroundColor: '#8f4720',
-    },
-    calendar: {
-        width: '100%',
-        maxWidth: 400,
-    },
     modalBackdrop: {
         backgroundColor: 'rgba(250, 189, 194, 0.3)',
         zIndex: 10,
@@ -609,7 +631,69 @@ const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
         backgroundColor: '#fff',
         textAlignVertical: 'top',
     },
+    dateModalContent: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        height: height * 0.3,
+        backgroundColor: COLORS.white,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        padding: 20,
+        zIndex: 20,
+    },
+    dateModalText: {
+        fontSize: 24,
+        textAlign: 'center',
+        marginTop: 20,
+        fontFamily: 'Comfortaa-Regular',
+    },
+    dateModalCloseButton: {
+        marginTop: 30,
+        padding: 15,
+        backgroundColor: COLORS.pinkish,
+        borderRadius: 20,
+        alignItems: 'center',
+    },
+    dateModalCloseText: {
+        color: COLORS.white,
+        fontSize: 18,
+        fontFamily: 'Comfortaa-Regular',
+    },
 
 });
+
+
+function generateMonths(monthsCount, intervals) {
+    let firstMonth = new Date().setMonth(new Date().getMonth() - monthsCount / 2);
+
+    let dates = []
+    for (let i = 0; i < monthsCount; i++) {
+        let date = new Date(firstMonth);
+        date.setMonth(date.getMonth() + i + 1);
+
+        let key = toIsoString(date)
+
+
+        let markedDates= []
+        intervals.forEach(interval => {
+            generateDaysBetween(interval.start, interval.finish).forEach((day) => {markedDates.push(day)})
+        })
+
+        const markings = Object.fromEntries(markedDates.map((key, index) => [key, {
+            color: 'green',
+            startingDay: index === 0,
+            endingDay: index === markedDates.length - 1,
+        }]));
+
+
+        let month = {key: key, markings: markings}
+
+        dates.push(month);
+    }
+    return dates;
+}
 
 export default HomeScreen;

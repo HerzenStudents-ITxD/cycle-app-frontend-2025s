@@ -182,7 +182,7 @@ export default function LoginScreen({navigation}) {
 const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#a93939',
     },
     centeredContainer: {
         flex: 1,
@@ -192,6 +192,7 @@ const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
         alignSelf: 'center', // Важно для центрирования
         justifyContent: 'space-between', // Прижимаем кнопку "далее" к низу
         paddingVertical: 20,
+        backgroundColor: '#3aa8be',
     },
     title: {
         fontSize: 24,
@@ -205,6 +206,7 @@ const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
         width: '100%',
         alignItems: 'flex-start', // Выравниваем элементы по левому краю
         flexGrow: 1, // Позволяет контейнеру растягиваться
+        backgroundColor: '#62b823',
     },
     fieldLabel: {
         fontSize: 18.1,
@@ -244,6 +246,7 @@ const createStyles = ({width = 375, height = 812} = {}) => StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         paddingBottom: '15%', // Добавляем отступ снизу
+        backgroundColor: '#7c781f'
     },
     nextButton: {
         borderRadius: 4,

@@ -67,10 +67,7 @@ const SettingsScreen = () => {
         let config = await getConfigAuth()
             .catch(err => { console.error(err); handleLogout() });
 
-        let userId = await AsyncStorage.getItem('UserId')
-            .catch(err => { console.error(err); handleLogout() });
-
-        let request = new UsersApi(config).apiUsersUserIdGet(userId)
+        let request = new UsersApi(config).apiUsersGet()
             .catch((error) => {
                 console.log(error);
                 if (error.status === 401 || error.status === 403) {
@@ -93,10 +90,7 @@ const SettingsScreen = () => {
         let config = await getConfigAuth()
             .catch(err => { console.error(err); handleLogout() });
 
-        let userId = await AsyncStorage.getItem('UserId')
-            .catch(err => { console.error(err); handleLogout() });
-
-        let request = new UsersApi(config).apiUsersUserIdPut(userId, {
+        let request = new UsersApi(config).apiUsersPut( {
             cycleLength: cycleLength,
             periodLength: menstruationLength,
             remindPeriod: remindMenstruation,

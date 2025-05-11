@@ -24,12 +24,10 @@ const apiInstance = new OvulationsApi(configuration);
 
 let startDate: string; // (optional) (default to undefined)
 let endDate: string; // (optional) (default to undefined)
-let userId: string; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.apiOvulationsByDateRangeGet(
     startDate,
-    endDate,
-    userId
+    endDate
 );
 ```
 
@@ -39,7 +37,6 @@ const { status, data } = await apiInstance.apiOvulationsByDateRangeGet(
 |------------- | ------------- | ------------- | -------------|
 | **startDate** | [**string**] |  | (optional) defaults to undefined|
 | **endDate** | [**string**] |  | (optional) defaults to undefined|
-| **userId** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type

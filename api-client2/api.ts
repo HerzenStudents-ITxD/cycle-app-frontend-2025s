@@ -90,13 +90,13 @@ export interface CreateEntryRequest {
      * @type {boolean}
      * @memberof CreateEntryRequest
      */
-    'periodStarted'?: boolean | null;
+    'periodStarted'?: boolean;
     /**
      * 
      * @type {boolean}
      * @memberof CreateEntryRequest
      */
-    'periodEnded'?: boolean | null;
+    'periodEnded'?: boolean;
     /**
      * 
      * @type {string}
@@ -111,10 +111,10 @@ export interface CreateEntryRequest {
     'heaviness'?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {Array<SymptomRequest>}
      * @memberof CreateEntryRequest
      */
-    'symptoms'?: string | null;
+    'symptoms'?: Array<SymptomRequest> | null;
     /**
      * 
      * @type {string}
@@ -174,27 +174,34 @@ export interface CreatePeriodRequest {
 /**
  * 
  * @export
- * @interface UpdateEntryRequest
+ * @interface SymptomRequest
  */
-export interface UpdateEntryRequest {
+export interface SymptomRequest {
     /**
      * 
      * @type {string}
-     * @memberof UpdateEntryRequest
+     * @memberof SymptomRequest
      */
-    'date'?: string | null;
+    'name': string;
     /**
      * 
-     * @type {boolean}
-     * @memberof UpdateEntryRequest
+     * @type {string}
+     * @memberof SymptomRequest
      */
-    'periodStarted'?: boolean | null;
+    'intensity'?: string | null;
     /**
      * 
-     * @type {boolean}
-     * @memberof UpdateEntryRequest
+     * @type {string}
+     * @memberof SymptomRequest
      */
-    'periodEnded'?: boolean | null;
+    'notes'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateEntryRequest
+ */
+export interface UpdateEntryRequest {
     /**
      * 
      * @type {string}
@@ -209,10 +216,10 @@ export interface UpdateEntryRequest {
     'heaviness'?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {Array<SymptomRequest>}
      * @memberof UpdateEntryRequest
      */
-    'symptoms'?: string | null;
+    'symptoms'?: Array<SymptomRequest> | null;
     /**
      * 
      * @type {string}
@@ -529,191 +536,6 @@ export class AuthApi extends BaseAPI {
 
 
 /**
- * EmailVerificationApi - axios parameter creator
- * @export
- */
-export const EmailVerificationApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {string} [email] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiEmailVerificationSendCodePost: async (email?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/EmailVerification/send-code`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-            if (email !== undefined) {
-                localVarQueryParameter['email'] = email;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} [email] 
-         * @param {string} [code] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiEmailVerificationVerifyCodePost: async (email?: string, code?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/EmailVerification/verify-code`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-            if (email !== undefined) {
-                localVarQueryParameter['email'] = email;
-            }
-
-            if (code !== undefined) {
-                localVarQueryParameter['code'] = code;
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * EmailVerificationApi - functional programming interface
- * @export
- */
-export const EmailVerificationApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = EmailVerificationApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {string} [email] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiEmailVerificationSendCodePost(email?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEmailVerificationSendCodePost(email, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['EmailVerificationApi.apiEmailVerificationSendCodePost']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string} [email] 
-         * @param {string} [code] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiEmailVerificationVerifyCodePost(email?: string, code?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEmailVerificationVerifyCodePost(email, code, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['EmailVerificationApi.apiEmailVerificationVerifyCodePost']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * EmailVerificationApi - factory interface
- * @export
- */
-export const EmailVerificationApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = EmailVerificationApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {string} [email] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiEmailVerificationSendCodePost(email?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiEmailVerificationSendCodePost(email, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} [email] 
-         * @param {string} [code] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiEmailVerificationVerifyCodePost(email?: string, code?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiEmailVerificationVerifyCodePost(email, code, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * EmailVerificationApi - object-oriented interface
- * @export
- * @class EmailVerificationApi
- * @extends {BaseAPI}
- */
-export class EmailVerificationApi extends BaseAPI {
-    /**
-     * 
-     * @param {string} [email] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EmailVerificationApi
-     */
-    public apiEmailVerificationSendCodePost(email?: string, options?: RawAxiosRequestConfig) {
-        return EmailVerificationApiFp(this.configuration).apiEmailVerificationSendCodePost(email, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} [email] 
-     * @param {string} [code] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof EmailVerificationApi
-     */
-    public apiEmailVerificationVerifyCodePost(email?: string, code?: string, options?: RawAxiosRequestConfig) {
-        return EmailVerificationApiFp(this.configuration).apiEmailVerificationVerifyCodePost(email, code, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
  * EntriesApi - axios parameter creator
  * @export
  */
@@ -723,11 +545,10 @@ export const EntriesApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiEntriesByDateRangeGet: async (startDate?: string, endDate?: string, userId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiEntriesByDateRangeGet: async (startDate?: string, endDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Entries/by-date-range`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -744,19 +565,15 @@ export const EntriesApiAxiosParamCreator = function (configuration?: Configurati
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (startDate !== undefined) {
-                localVarQueryParameter['start_date'] = (startDate as any instanceof Date) ?
+                localVarQueryParameter['startDate'] = (startDate as any instanceof Date) ?
                     (startDate as any).toISOString() :
                     startDate;
             }
 
             if (endDate !== undefined) {
-                localVarQueryParameter['end_date'] = (endDate as any instanceof Date) ?
+                localVarQueryParameter['endDate'] = (endDate as any instanceof Date) ?
                     (endDate as any).toISOString() :
                     endDate;
-            }
-
-            if (userId !== undefined) {
-                localVarQueryParameter['user_id'] = userId;
             }
 
 
@@ -772,15 +589,11 @@ export const EntriesApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} entryId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiEntriesEntryIdDelete: async (entryId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'entryId' is not null or undefined
-            assertParamExists('apiEntriesEntryIdDelete', 'entryId', entryId)
-            const localVarPath = `/api/Entries/{entryId}`
-                .replace(`{${"entryId"}}`, encodeURIComponent(String(entryId)));
+        apiEntriesCurrentPeriodGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Entries/current-period`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -788,7 +601,7 @@ export const EntriesApiAxiosParamCreator = function (configuration?: Configurati
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -808,11 +621,11 @@ export const EntriesApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} entryId 
+         * @param {number} entryId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiEntriesEntryIdGet: async (entryId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiEntriesEntryIdGet: async (entryId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'entryId' is not null or undefined
             assertParamExists('apiEntriesEntryIdGet', 'entryId', entryId)
             const localVarPath = `/api/Entries/{entryId}`
@@ -844,16 +657,52 @@ export const EntriesApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} entryId 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiEntriesIdDelete: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('apiEntriesIdDelete', 'id', id)
+            const localVarPath = `/api/Entries/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
          * @param {UpdateEntryRequest} [updateEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiEntriesEntryIdPut: async (entryId: string, updateEntryRequest?: UpdateEntryRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'entryId' is not null or undefined
-            assertParamExists('apiEntriesEntryIdPut', 'entryId', entryId)
-            const localVarPath = `/api/Entries/{entryId}`
-                .replace(`{${"entryId"}}`, encodeURIComponent(String(entryId)));
+        apiEntriesIdPut: async (id: number, updateEntryRequest?: UpdateEntryRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('apiEntriesIdPut', 'id', id)
+            const localVarPath = `/api/Entries/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -932,35 +781,33 @@ export const EntriesApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiEntriesByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEntriesByDateRangeGet(startDate, endDate, userId, options);
+        async apiEntriesByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEntriesByDateRangeGet(startDate, endDate, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EntriesApi.apiEntriesByDateRangeGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
-         * @param {string} entryId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiEntriesEntryIdDelete(entryId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEntriesEntryIdDelete(entryId, options);
+        async apiEntriesCurrentPeriodGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEntriesCurrentPeriodGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['EntriesApi.apiEntriesEntryIdDelete']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['EntriesApi.apiEntriesCurrentPeriodGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
-         * @param {string} entryId 
+         * @param {number} entryId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiEntriesEntryIdGet(entryId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async apiEntriesEntryIdGet(entryId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiEntriesEntryIdGet(entryId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EntriesApi.apiEntriesEntryIdGet']?.[localVarOperationServerIndex]?.url;
@@ -968,15 +815,27 @@ export const EntriesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} entryId 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiEntriesIdDelete(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEntriesIdDelete(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EntriesApi.apiEntriesIdDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
          * @param {UpdateEntryRequest} [updateEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiEntriesEntryIdPut(entryId: string, updateEntryRequest?: UpdateEntryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEntriesEntryIdPut(entryId, updateEntryRequest, options);
+        async apiEntriesIdPut(id: number, updateEntryRequest?: UpdateEntryRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiEntriesIdPut(id, updateEntryRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['EntriesApi.apiEntriesEntryIdPut']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['EntriesApi.apiEntriesIdPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1005,40 +864,47 @@ export const EntriesApiFactory = function (configuration?: Configuration, basePa
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiEntriesByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiEntriesByDateRangeGet(startDate, endDate, userId, options).then((request) => request(axios, basePath));
+        apiEntriesByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiEntriesByDateRangeGet(startDate, endDate, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} entryId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiEntriesEntryIdDelete(entryId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiEntriesEntryIdDelete(entryId, options).then((request) => request(axios, basePath));
+        apiEntriesCurrentPeriodGet(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiEntriesCurrentPeriodGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} entryId 
+         * @param {number} entryId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiEntriesEntryIdGet(entryId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        apiEntriesEntryIdGet(entryId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.apiEntriesEntryIdGet(entryId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} entryId 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiEntriesIdDelete(id: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiEntriesIdDelete(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} id 
          * @param {UpdateEntryRequest} [updateEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiEntriesEntryIdPut(entryId: string, updateEntryRequest?: UpdateEntryRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiEntriesEntryIdPut(entryId, updateEntryRequest, options).then((request) => request(axios, basePath));
+        apiEntriesIdPut(id: number, updateEntryRequest?: UpdateEntryRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiEntriesIdPut(id, updateEntryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1063,47 +929,56 @@ export class EntriesApi extends BaseAPI {
      * 
      * @param {string} [startDate] 
      * @param {string} [endDate] 
-     * @param {string} [userId] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EntriesApi
      */
-    public apiEntriesByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig) {
-        return EntriesApiFp(this.configuration).apiEntriesByDateRangeGet(startDate, endDate, userId, options).then((request) => request(this.axios, this.basePath));
+    public apiEntriesByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig) {
+        return EntriesApiFp(this.configuration).apiEntriesByDateRangeGet(startDate, endDate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} entryId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EntriesApi
      */
-    public apiEntriesEntryIdDelete(entryId: string, options?: RawAxiosRequestConfig) {
-        return EntriesApiFp(this.configuration).apiEntriesEntryIdDelete(entryId, options).then((request) => request(this.axios, this.basePath));
+    public apiEntriesCurrentPeriodGet(options?: RawAxiosRequestConfig) {
+        return EntriesApiFp(this.configuration).apiEntriesCurrentPeriodGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} entryId 
+     * @param {number} entryId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EntriesApi
      */
-    public apiEntriesEntryIdGet(entryId: string, options?: RawAxiosRequestConfig) {
+    public apiEntriesEntryIdGet(entryId: number, options?: RawAxiosRequestConfig) {
         return EntriesApiFp(this.configuration).apiEntriesEntryIdGet(entryId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} entryId 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EntriesApi
+     */
+    public apiEntriesIdDelete(id: number, options?: RawAxiosRequestConfig) {
+        return EntriesApiFp(this.configuration).apiEntriesIdDelete(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} id 
      * @param {UpdateEntryRequest} [updateEntryRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EntriesApi
      */
-    public apiEntriesEntryIdPut(entryId: string, updateEntryRequest?: UpdateEntryRequest, options?: RawAxiosRequestConfig) {
-        return EntriesApiFp(this.configuration).apiEntriesEntryIdPut(entryId, updateEntryRequest, options).then((request) => request(this.axios, this.basePath));
+    public apiEntriesIdPut(id: number, updateEntryRequest?: UpdateEntryRequest, options?: RawAxiosRequestConfig) {
+        return EntriesApiFp(this.configuration).apiEntriesIdPut(id, updateEntryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1130,11 +1005,10 @@ export const OvulationsApiAxiosParamCreator = function (configuration?: Configur
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiOvulationsByDateRangeGet: async (startDate?: string, endDate?: string, userId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiOvulationsByDateRangeGet: async (startDate?: string, endDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Ovulations/by-date-range`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1160,10 +1034,6 @@ export const OvulationsApiAxiosParamCreator = function (configuration?: Configur
                 localVarQueryParameter['end_date'] = (endDate as any instanceof Date) ?
                     (endDate as any).toISOString() :
                     endDate;
-            }
-
-            if (userId !== undefined) {
-                localVarQueryParameter['user_id'] = userId;
             }
 
 
@@ -1227,12 +1097,11 @@ export const OvulationsApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiOvulationsByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiOvulationsByDateRangeGet(startDate, endDate, userId, options);
+        async apiOvulationsByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiOvulationsByDateRangeGet(startDate, endDate, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['OvulationsApi.apiOvulationsByDateRangeGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1263,12 +1132,11 @@ export const OvulationsApiFactory = function (configuration?: Configuration, bas
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiOvulationsByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiOvulationsByDateRangeGet(startDate, endDate, userId, options).then((request) => request(axios, basePath));
+        apiOvulationsByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiOvulationsByDateRangeGet(startDate, endDate, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1293,13 +1161,12 @@ export class OvulationsApi extends BaseAPI {
      * 
      * @param {string} [startDate] 
      * @param {string} [endDate] 
-     * @param {string} [userId] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof OvulationsApi
      */
-    public apiOvulationsByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig) {
-        return OvulationsApiFp(this.configuration).apiOvulationsByDateRangeGet(startDate, endDate, userId, options).then((request) => request(this.axios, this.basePath));
+    public apiOvulationsByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig) {
+        return OvulationsApiFp(this.configuration).apiOvulationsByDateRangeGet(startDate, endDate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1326,11 +1193,10 @@ export const PeriodsApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPeriodsByDateRangeGet: async (startDate?: string, endDate?: string, userId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiPeriodsByDateRangeGet: async (startDate?: string, endDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Periods/by-date-range`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1347,19 +1213,15 @@ export const PeriodsApiAxiosParamCreator = function (configuration?: Configurati
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
             if (startDate !== undefined) {
-                localVarQueryParameter['start_date'] = (startDate as any instanceof Date) ?
+                localVarQueryParameter['startDate'] = (startDate as any instanceof Date) ?
                     (startDate as any).toISOString() :
                     startDate;
             }
 
             if (endDate !== undefined) {
-                localVarQueryParameter['end_date'] = (endDate as any instanceof Date) ?
+                localVarQueryParameter['endDate'] = (endDate as any instanceof Date) ?
                     (endDate as any).toISOString() :
                     endDate;
-            }
-
-            if (userId !== undefined) {
-                localVarQueryParameter['user_id'] = userId;
             }
 
 
@@ -1375,11 +1237,10 @@ export const PeriodsApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPeriodsGet: async (userId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiPeriodsGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Periods`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1394,10 +1255,6 @@ export const PeriodsApiAxiosParamCreator = function (configuration?: Configurati
 
             // authentication Bearer required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-            if (userId !== undefined) {
-                localVarQueryParameter['userId'] = userId;
-            }
 
 
     
@@ -1446,6 +1303,52 @@ export const PeriodsApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPeriodsTableGet: async (startDate?: string, endDate?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Periods/table`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (startDate !== undefined) {
+                localVarQueryParameter['startDate'] = (startDate as any instanceof Date) ?
+                    (startDate as any).toISOString() :
+                    startDate;
+            }
+
+            if (endDate !== undefined) {
+                localVarQueryParameter['endDate'] = (endDate as any instanceof Date) ?
+                    (endDate as any).toISOString() :
+                    endDate;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1460,24 +1363,22 @@ export const PeriodsApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiPeriodsByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPeriodsByDateRangeGet(startDate, endDate, userId, options);
+        async apiPeriodsByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPeriodsByDateRangeGet(startDate, endDate, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PeriodsApi.apiPeriodsByDateRangeGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiPeriodsGet(userId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPeriodsGet(userId, options);
+        async apiPeriodsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPeriodsGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PeriodsApi.apiPeriodsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1494,6 +1395,19 @@ export const PeriodsApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['PeriodsApi.apiPeriodsPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiPeriodsTableGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPeriodsTableGet(startDate, endDate, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PeriodsApi.apiPeriodsTableGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -1508,21 +1422,19 @@ export const PeriodsApiFactory = function (configuration?: Configuration, basePa
          * 
          * @param {string} [startDate] 
          * @param {string} [endDate] 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPeriodsByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiPeriodsByDateRangeGet(startDate, endDate, userId, options).then((request) => request(axios, basePath));
+        apiPeriodsByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiPeriodsByDateRangeGet(startDate, endDate, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} [userId] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPeriodsGet(userId?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiPeriodsGet(userId, options).then((request) => request(axios, basePath));
+        apiPeriodsGet(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiPeriodsGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1532,6 +1444,16 @@ export const PeriodsApiFactory = function (configuration?: Configuration, basePa
          */
         apiPeriodsPost(createPeriodRequest?: CreatePeriodRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.apiPeriodsPost(createPeriodRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [startDate] 
+         * @param {string} [endDate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPeriodsTableGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiPeriodsTableGet(startDate, endDate, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1547,24 +1469,22 @@ export class PeriodsApi extends BaseAPI {
      * 
      * @param {string} [startDate] 
      * @param {string} [endDate] 
-     * @param {string} [userId] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PeriodsApi
      */
-    public apiPeriodsByDateRangeGet(startDate?: string, endDate?: string, userId?: string, options?: RawAxiosRequestConfig) {
-        return PeriodsApiFp(this.configuration).apiPeriodsByDateRangeGet(startDate, endDate, userId, options).then((request) => request(this.axios, this.basePath));
+    public apiPeriodsByDateRangeGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig) {
+        return PeriodsApiFp(this.configuration).apiPeriodsByDateRangeGet(startDate, endDate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} [userId] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PeriodsApi
      */
-    public apiPeriodsGet(userId?: string, options?: RawAxiosRequestConfig) {
-        return PeriodsApiFp(this.configuration).apiPeriodsGet(userId, options).then((request) => request(this.axios, this.basePath));
+    public apiPeriodsGet(options?: RawAxiosRequestConfig) {
+        return PeriodsApiFp(this.configuration).apiPeriodsGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1576,6 +1496,18 @@ export class PeriodsApi extends BaseAPI {
      */
     public apiPeriodsPost(createPeriodRequest?: CreatePeriodRequest, options?: RawAxiosRequestConfig) {
         return PeriodsApiFp(this.configuration).apiPeriodsPost(createPeriodRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} [startDate] 
+     * @param {string} [endDate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PeriodsApi
+     */
+    public apiPeriodsTableGet(startDate?: string, endDate?: string, options?: RawAxiosRequestConfig) {
+        return PeriodsApiFp(this.configuration).apiPeriodsTableGet(startDate, endDate, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1589,15 +1521,11 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
-         * @param {string} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUsersUserIdGet: async (userId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('apiUsersUserIdGet', 'userId', userId)
-            const localVarPath = `/api/Users/{userId}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+        apiUsersGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1625,16 +1553,12 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
-         * @param {string} userId 
          * @param {UpdateUserRequest} [updateUserRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUsersUserIdPut: async (userId: string, updateUserRequest?: UpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('apiUsersUserIdPut', 'userId', userId)
-            const localVarPath = `/api/Users/{userId}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+        apiUsersPut: async (updateUserRequest?: UpdateUserRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Users`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1675,27 +1599,25 @@ export const UsersApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {string} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUsersUserIdGet(userId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUsersUserIdGet(userId, options);
+        async apiUsersGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUsersGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UsersApi.apiUsersUserIdGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['UsersApi.apiUsersGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
-         * @param {string} userId 
          * @param {UpdateUserRequest} [updateUserRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUsersUserIdPut(userId: string, updateUserRequest?: UpdateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUsersUserIdPut(userId, updateUserRequest, options);
+        async apiUsersPut(updateUserRequest?: UpdateUserRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUsersPut(updateUserRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UsersApi.apiUsersUserIdPut']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['UsersApi.apiUsersPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -1710,22 +1632,20 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * 
-         * @param {string} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUsersUserIdGet(userId: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiUsersUserIdGet(userId, options).then((request) => request(axios, basePath));
+        apiUsersGet(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiUsersGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} userId 
          * @param {UpdateUserRequest} [updateUserRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUsersUserIdPut(userId: string, updateUserRequest?: UpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.apiUsersUserIdPut(userId, updateUserRequest, options).then((request) => request(axios, basePath));
+        apiUsersPut(updateUserRequest?: UpdateUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.apiUsersPut(updateUserRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1739,25 +1659,23 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
 export class UsersApi extends BaseAPI {
     /**
      * 
-     * @param {string} userId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public apiUsersUserIdGet(userId: string, options?: RawAxiosRequestConfig) {
-        return UsersApiFp(this.configuration).apiUsersUserIdGet(userId, options).then((request) => request(this.axios, this.basePath));
+    public apiUsersGet(options?: RawAxiosRequestConfig) {
+        return UsersApiFp(this.configuration).apiUsersGet(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} userId 
      * @param {UpdateUserRequest} [updateUserRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UsersApi
      */
-    public apiUsersUserIdPut(userId: string, updateUserRequest?: UpdateUserRequest, options?: RawAxiosRequestConfig) {
-        return UsersApiFp(this.configuration).apiUsersUserIdPut(userId, updateUserRequest, options).then((request) => request(this.axios, this.basePath));
+    public apiUsersPut(updateUserRequest?: UpdateUserRequest, options?: RawAxiosRequestConfig) {
+        return UsersApiFp(this.configuration).apiUsersPut(updateUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
